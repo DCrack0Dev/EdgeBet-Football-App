@@ -1,0 +1,63 @@
+'use client'
+
+import { useState, Suspense } from 'react'
+import { Sidebar } from './Sidebar'
+import { TopNav } from './TopNav'
+import { MobileNav } from './MobileNav'
+import { Profile, cn } from '@/lib/supabase'
+import { X, Zap } from 'lucide-react'
+import Link from 'next/link'
+import { Skeleton } from './LoadingSkeleton'
+
+interface AppLayoutProps {
+  children: React.ReactNode;
+  profile: Profile | null;
+}
+
+function LayoutLoading() {
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="h-12 w-1/3 bg-white/5 rounded-2xl animate-pulse" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="h-32 bg-white/5 rounded-3xl animate-pulse" />
+        ))}
+      </div>
+      <div className="h-96 bg-white/5 rounded-[40px] animate-pulse" />
+    </div>
+  )
+}
+
+export function AppLayout({ children, profile }: AppLayoutProps) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  
+  const isPremium = profile?.subscriptions?.some((s: any) => s.status === 'premium') || profile?.role === 'admin'
+  const isAdmin = profile?.role === 'admin'
+
+  return (
+    <div className="flex min-h-screen bg-background text-white selection:bg-primary selection:text-black">
+      {/* Desktop Sidebar */}
+      <Sidebar role={profile?.role} />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <TopNav 
+          profile={profile} 
+          isPremium={!!isPremium} 
+          onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+        />
+
+        <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8 max-w-7xl mx-auto w-full">
+          <Suspense fallback={<LayoutLoading />}>
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
+              {children}
+            </div>
+          </Suspense>
+        </main>
+
+        {/* Mobile Bottom Bar */}
+        <MobileNav />
+      </div>
+    </div>
+  )
+}
