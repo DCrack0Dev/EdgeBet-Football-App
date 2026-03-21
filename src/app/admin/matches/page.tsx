@@ -23,7 +23,7 @@ import { redirect } from 'next/navigation'
 export const dynamic = 'force-dynamic'
 
 export default async function ManageMatchesPage() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   
   const { data: { session } } = await supabase.auth.getSession()
   

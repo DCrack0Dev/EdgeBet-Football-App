@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 export default async function Dashboard() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   
   const { data: { session } } = await supabase.auth.getSession()
   

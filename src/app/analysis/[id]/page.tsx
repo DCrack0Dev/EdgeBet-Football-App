@@ -28,7 +28,7 @@ import { notFound } from 'next/navigation'
 import { cn, checkIsPremium } from '@/lib/supabase'
 
 export default async function MatchAnalysisDetailPage({ params }: { params: { id: string } }) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   const { id } = params
 
   const { data: { session } } = await supabase.auth.getSession()

@@ -26,7 +26,7 @@ import { SlipAdUnlockOverlay } from '@/components/SlipAdUnlockOverlay'
 export const dynamic = 'force-dynamic'
 
 export default async function SlipDetailsPage({ params }: { params: { id: string } }) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   const { id } = params
 
   const { data: { session } } = await supabase.auth.getSession()

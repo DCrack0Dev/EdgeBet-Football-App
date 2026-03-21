@@ -1,8 +1,8 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
+import { createServerClient as createSsrServerClient } from '@supabase/ssr'
 
-export const createServerClient = () => {
+export const createServerClient = async () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
@@ -32,7 +32,17 @@ export const createServerClient = () => {
     throw new Error('Missing Supabase environment variables for server-side initialization.')
   }
 
-  return createServerComponentClient({ cookies })
+  const cookieStore = await cookies()
+
+  return createSsrServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll()
+      },
+      setAll() {
+      },
+    },
+  })
 }
 
 // Admin client for server-side only (using service role key)

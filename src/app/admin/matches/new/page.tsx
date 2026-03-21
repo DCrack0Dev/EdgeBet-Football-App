@@ -5,7 +5,7 @@ import NewMatchForm from '@/components/admin/NewMatchForm'
 export const dynamic = 'force-dynamic'
 
 export default async function NewMatchPage() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   
   const { data: { session } } = await supabase.auth.getSession()
   

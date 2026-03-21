@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 }
 
 export default async function ResultsHistoryPage() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   
   const { data: { session } } = await supabase.auth.getSession()
   
