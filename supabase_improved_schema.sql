@@ -132,6 +132,35 @@ CREATE TABLE IF NOT EXISTS slips (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- 8B. Slip Unlocks (Ad-gated daily unlocks for free users)
+CREATE TABLE IF NOT EXISTS slip_unlocks (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  slip_id UUID REFERENCES slips(id) ON DELETE CASCADE NOT NULL,
+  unlock_date DATE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS slip_unlocks_user_date_unique
+  ON slip_unlocks(user_id, unlock_date);
+
+CREATE UNIQUE INDEX IF NOT EXISTS slip_unlocks_user_slip_date_unique
+  ON slip_unlocks(user_id, slip_id, unlock_date);
+
+ALTER TABLE slip_unlocks ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can read own slip unlocks" ON slip_unlocks;
+CREATE POLICY "Users can read own slip unlocks"
+ON slip_unlocks
+FOR SELECT
+USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can create own slip unlocks" ON slip_unlocks;
+CREATE POLICY "Users can create own slip unlocks"
+ON slip_unlocks
+FOR INSERT
+WITH CHECK (auth.uid() = user_id);
+
 -- 9. Slip Items Table (Many-to-Many between Slips and Picks)
 CREATE TABLE IF NOT EXISTS slip_items (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -199,6 +228,7 @@ ALTER TABLE matches ENABLE ROW LEVEL SECURITY;
 ALTER TABLE picks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pick_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE slips ENABLE ROW LEVEL SECURITY;
+ALTER TABLE slip_unlocks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE slip_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE saved_picks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE saved_slips ENABLE ROW LEVEL SECURITY;

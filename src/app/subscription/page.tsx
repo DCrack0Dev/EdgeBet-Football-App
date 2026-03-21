@@ -33,13 +33,19 @@ export default function SubscriptionPage() {
   const [checkoutLoading, setCheckoutLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
-  )
-
   useEffect(() => {
     async function fetchProfile() {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+      if (!supabaseUrl || !supabaseAnonKey) {
+        setError('Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.')
+        setLoading(false)
+        return
+      }
+
+      const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey)
+
       const { data: { session } } = await supabase.auth.getSession()
       if (session) {
         const { data } = await supabase
@@ -49,6 +55,7 @@ export default function SubscriptionPage() {
           .single()
         setProfile(data)
       }
+
       setLoading(false)
     }
     fetchProfile()

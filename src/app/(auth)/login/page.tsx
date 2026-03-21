@@ -3,7 +3,6 @@
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { createBrowserClient } from '@supabase/ssr'
 import { AuthLayout } from '@/components/AuthLayout'
 import { Button } from '@/components/Button'
 import { AlertCircle, ArrowRight, Mail, Lock } from 'lucide-react'
@@ -17,27 +16,52 @@ function LoginForm() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect')
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
-  )
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-    if (error) {
-      setError(error.message)
+    if (!supabaseUrl || !supabaseAnonKey) {
+      setError('Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.')
       setLoading(false)
-    } else {
-      router.push(redirect || '/dashboard')
-      router.refresh()
+      return
+    }
+
+    try {
+      const controller = new AbortController()
+      const timeoutId = window.setTimeout(() => controller.abort(), 15000)
+
+      const res = await fetch('/api/auth/password-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+        signal: controller.signal,
+      })
+
+      window.clearTimeout(timeoutId)
+
+      if (!res.ok) {
+        const text = await res.text()
+        throw new Error(text || 'Login failed')
+      }
+
+      const who = await fetch('/api/auth/whoami', { cache: 'no-store' })
+      const whoJson = await who.json().catch(() => null)
+      if (!whoJson?.user?.id) {
+        throw new Error('Signed in, but session cookie was not set. Check Supabase Auth Site URL/Redirect URLs and redeploy.')
+      }
+
+      window.location.href = redirect || '/dashboard'
+    } catch (e: any) {
+      const msg =
+        e?.name === 'AbortError'
+          ? 'Login timed out. Check network and Supabase configuration.'
+          : e?.message || 'Login failed'
+      setError(msg)
+      setLoading(false)
     }
   }
 

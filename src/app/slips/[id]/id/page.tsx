@@ -14,24 +14,33 @@ import {
   Share2,
   Lock,
   CheckCircle2,
-  XCircle
+  XCircle,
+  AlertCircle
 } from 'lucide-react'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
-import { cn } from '@/lib/supabase'
+import { notFound, redirect } from 'next/navigation'
+import { cn, checkIsPremium } from '@/lib/supabase'
 import { SaveSlipButton } from '@/components/SaveSlipButton'
+import { SlipAdUnlockOverlay } from '@/components/SlipAdUnlockOverlay'
+
+export const dynamic = 'force-dynamic'
 
 export default async function SlipDetailsPage({ params }: { params: { id: string } }) {
   const supabase = createServerClient()
   const { id } = params
 
   const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.user) {
+    redirect(`/login?redirect=/slips/${id}/id`)
+  }
   
   const { data: profile } = await supabase
     .from('profiles')
     .select('*, subscriptions(*)')
     .eq('id', session?.user?.id)
     .single()
+
+  const premiumUser = checkIsPremium(profile)
 
   const { data: slip } = await supabase
     .from('slips')
@@ -41,8 +50,29 @@ export default async function SlipDetailsPage({ params }: { params: { id: string
 
   if (!slip || !slip.is_published) notFound()
 
-  const isPremium = profile?.subscriptions?.some((s: any) => s.status === 'premium') || profile?.role === 'admin'
-  const isLocked = slip.is_premium && !isPremium
+  const isLocked = slip.is_premium && !premiumUser
+  const needsAdUnlock = !slip.is_premium && !premiumUser
+
+  const today = new Date()
+  const unlockDate = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()))
+    .toISOString()
+    .slice(0, 10)
+
+  const { count: usedToday } = await supabase
+    .from('slip_unlocks')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', session.user.id)
+    .eq('unlock_date', unlockDate)
+
+  const { count: unlockedThisSlipToday } = await supabase
+    .from('slip_unlocks')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', session.user.id)
+    .eq('unlock_date', unlockDate)
+    .eq('slip_id', id)
+
+  const isUnlockedToday = (unlockedThisSlipToday || 0) > 0
+  const remainingToday = Math.max(0, 1 - (usedToday || 0))
 
   // Check if slip is already saved
   const { data: savedStatus } = await supabase
@@ -110,6 +140,21 @@ export default async function SlipDetailsPage({ params }: { params: { id: string
           </div>
         </div>
 
+        {needsAdUnlock && !isUnlockedToday && (
+          <div className="relative mb-12 rounded-[48px] border border-white/5 bg-white/5 overflow-hidden">
+            <div className="p-8 md:p-10">
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-500">
+                <AlertCircle className="w-3.5 h-3.5 text-primary" />
+                Unlock required to view slip selections
+              </div>
+              <div className="mt-4 text-sm text-gray-400 font-medium leading-relaxed max-w-2xl">
+                Free users can unlock 1 slip per day by viewing an ad.
+              </div>
+            </div>
+            <SlipAdUnlockOverlay slipId={id} remainingToday={remainingToday} />
+          </div>
+        )}
+
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {[
@@ -149,6 +194,16 @@ export default async function SlipDetailsPage({ params }: { params: { id: string
                   Upgrade to Premium
                 </Button>
               </Link>
+            </div>
+          </div>
+        ) : needsAdUnlock && !isUnlockedToday ? (
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-1 h-6 bg-primary rounded-full" />
+              <h2 className="text-xl font-black uppercase tracking-widest text-white">Slip Selections</h2>
+            </div>
+            <div className="p-10 rounded-[32px] bg-white/5 border border-white/5 text-center text-gray-500 text-xs font-black uppercase tracking-widest">
+              Unlock this slip to view selections
             </div>
           </div>
         ) : (
