@@ -20,6 +20,8 @@ import Link from 'next/link'
 import { Button, cn } from '@/components/Button'
 import { redirect } from 'next/navigation'
 
+export const dynamic = 'force-dynamic'
+
 export default async function ManageMatchesPage() {
   const supabase = createServerClient()
   
@@ -75,7 +77,7 @@ export default async function ManageMatchesPage() {
               <Filter className="w-3.5 h-3.5 text-gray-500 ml-2" />
               <select className="bg-transparent text-[10px] font-black uppercase tracking-widest text-gray-400 focus:outline-none pr-4 cursor-pointer">
                 <option value="">All Leagues</option>
-                {leagues?.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+                {leagues?.map((l: any) => <option key={l.id} value={l.id}>{l.name}</option>)}
               </select>
             </div>
             

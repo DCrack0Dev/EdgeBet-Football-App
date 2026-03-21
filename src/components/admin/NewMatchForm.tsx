@@ -15,7 +15,10 @@ export default function NewMatchForm({ leagues, teams }: { leagues: any[], teams
   const [isFeatured, setIsFeatured] = useState(false)
   const [premiumAnalysis, setPremiumAnalysis] = useState(true)
   const [analysisSummary, setAnalysisSummary] = useState('')
-  const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
+  )
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {

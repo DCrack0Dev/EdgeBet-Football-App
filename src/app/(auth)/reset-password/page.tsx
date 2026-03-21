@@ -7,6 +7,8 @@ import { AuthLayout } from '@/components/AuthLayout'
 import { Button } from '@/components/Button'
 import { AlertCircle, ArrowRight, Lock, CheckCircle2 } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function ResetPassword() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setPasswordConfirm] = useState('')
@@ -16,8 +18,8 @@ export default function ResetPassword() {
   const router = useRouter()
   
   const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
   )
 
   const handleReset = async (e: React.FormEvent) => {

@@ -3,6 +3,8 @@ import { AppLayout } from '@/components/AppLayout'
 import { AnalysisClient } from './AnalysisClient'
 import { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: "Match Analysis",
   description: "In-depth technical analysis and statistical trends for upcoming football matches.",

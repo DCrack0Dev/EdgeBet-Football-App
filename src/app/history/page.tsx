@@ -32,6 +32,8 @@ import { ResultsClient } from './ResultsClient'
 import { Metadata } from 'next'
 import { calculatePerformance } from '@/lib/utils/calculations'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: "Results History",
   description: "Track our past performance and audit every betting slip outcome.",

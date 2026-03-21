@@ -6,6 +6,8 @@ import { Metadata } from 'next'
 import { calculatePerformance } from '@/lib/utils/calculations'
 import { checkIsPremium } from '@/lib/supabase'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: "Dashboard",
   description: "View today's top football picks, featured slips, and real-time performance stats.",

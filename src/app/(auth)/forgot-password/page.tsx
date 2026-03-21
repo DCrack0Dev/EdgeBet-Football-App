@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { createBrowserClient } from '@supabase/ssr'
 import { AuthLayout } from '@/components/AuthLayout'
 import { Button } from '@/components/Button'
 import { AlertCircle, ArrowRight, Mail, CheckCircle2, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
+
+export const dynamic = 'force-dynamic'
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
@@ -14,8 +16,8 @@ export default function ForgotPassword() {
   const [success, setSuccess] = useState(false)
   
   const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
   )
 
   const handleReset = async (e: React.FormEvent) => {

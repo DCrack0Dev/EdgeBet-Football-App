@@ -15,7 +15,10 @@ export default function NewSlipForm({ picks }: { picks: any[] }) {
   const [isPublished, setIsPublished] = useState(true)
   const [selectedPickIds, setSelectedPickIds] = useState<string[]>([])
 
-  const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
+  )
   const router = useRouter()
 
   const togglePick = (id: string) => {

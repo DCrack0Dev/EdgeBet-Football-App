@@ -23,6 +23,8 @@ import Link from 'next/link'
 import { cn } from '@/lib/supabase'
 import { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: "User Profile",
   description: "Manage your account settings, notification preferences, and subscription status.",

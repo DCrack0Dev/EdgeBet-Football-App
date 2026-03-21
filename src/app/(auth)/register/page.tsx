@@ -8,6 +8,8 @@ import { AuthLayout } from '@/components/AuthLayout'
 import { Button } from '@/components/Button'
 import { AlertCircle, ArrowRight, Mail, Lock, User, CheckCircle2 } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -17,8 +19,8 @@ export default function Register() {
   const [success, setSuccess] = useState(false)
   const router = useRouter()
   const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
   )
 
   const handleRegister = async (e: React.FormEvent) => {

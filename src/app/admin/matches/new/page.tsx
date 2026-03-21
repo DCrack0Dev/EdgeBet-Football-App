@@ -2,6 +2,8 @@ import { createServerClient } from '@/lib/supabase-server'
 import { AppLayout } from '@/components/AppLayout'
 import NewMatchForm from '@/components/admin/NewMatchForm'
 
+export const dynamic = 'force-dynamic'
+
 export default async function NewMatchPage() {
   const supabase = createServerClient()
   

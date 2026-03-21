@@ -2,6 +2,8 @@ import { createServerClient } from '@/lib/supabase-server'
 import { AppLayout } from '@/components/AppLayout'
 import NewSlipForm from '@/components/admin/NewSlipForm'
 
+export const dynamic = 'force-dynamic'
+
 export default async function NewSlipPage() {
   const supabase = createServerClient()
   

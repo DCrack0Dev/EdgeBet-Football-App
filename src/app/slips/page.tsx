@@ -8,6 +8,8 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 import { checkIsPremium } from '@/lib/supabase'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: "Daily Slips",
   description: "Browse expertly curated daily betting slips across multiple risk levels and markets.",

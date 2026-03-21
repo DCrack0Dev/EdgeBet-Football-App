@@ -23,6 +23,8 @@ import Link from 'next/link'
 import { Button, cn } from '@/components/Button'
 import { redirect } from 'next/navigation'
 
+export const dynamic = 'force-dynamic'
+
 export default async function ManagePicksPage() {
   const supabase = createServerClient()
   

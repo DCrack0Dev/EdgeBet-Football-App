@@ -2,6 +2,7 @@
 
 import { Card } from '@/components/Card'
 import { Match, cn } from '@/lib/supabase'
+import { createBrowserClient } from '@supabase/ssr'
 import { Calendar, Clock, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 
@@ -11,6 +12,10 @@ interface UpcomingMatchRowProps {
 }
 
 export function UpcomingMatchRow({ match, className }: UpcomingMatchRowProps) {
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
+  )
   const kickoff = new Date(match.kickoff_time)
   const isToday = kickoff.toDateString() === new Date().toDateString()
   

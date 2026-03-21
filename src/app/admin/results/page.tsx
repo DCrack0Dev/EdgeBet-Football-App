@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import { AppLayout } from '@/components/AppLayout'
+
+export const dynamic = 'force-dynamic'
 import { Card, CardHeader, CardTitle, CardContent, Badge } from '@/components/Card'
 import { 
   CheckCircle2, 
@@ -36,8 +38,8 @@ export default function ResultsUpdatePage() {
   const [bulkActionLoading, setBulkActionLoading] = useState(false)
 
   const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
   )
   const router = useRouter()
 

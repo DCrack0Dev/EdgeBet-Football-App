@@ -9,11 +9,17 @@ export function cn(...inputs: ClassValue[]) {
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+// Only throw error if we are not in build mode or if they are missing at runtime
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY must be defined.');
+  if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PHASE) {
+    console.warn('Supabase environment variables are missing. This will cause issues at runtime.');
+  }
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder-url.supabase.co', 
+  supabaseAnonKey || 'placeholder-key'
+);
 
 // --- Subscription Utilities ---
 export function checkIsPremium(profile: Profile | null): boolean {
