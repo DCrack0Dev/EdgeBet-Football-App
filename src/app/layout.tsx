@@ -4,6 +4,18 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL
+const normalizedSiteUrl = rawSiteUrl
+  ? rawSiteUrl.trim().replace(/^`|`$/g, "").replace(/^"|"$/g, "").replace(/^'|'$/g, "")
+  : null
+
+let metadataBaseUrl: URL
+try {
+  metadataBaseUrl = new URL(normalizedSiteUrl || "http://localhost:3000")
+} catch {
+  metadataBaseUrl = new URL("https://edge-bet-football-app.vercel.app")
+}
+
 export const metadata: Metadata = {
   title: {
     default: "EdgeBet Football | Daily Betting Insights & Premium Slips",
@@ -13,7 +25,7 @@ export const metadata: Metadata = {
   keywords: ["football betting", "soccer picks", "betting slips", "match analysis", "betting insights", "premium picks", "betting strategy"],
   authors: [{ name: "EdgeBet Team" }],
   creator: "EdgeBet Football",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: metadataBaseUrl,
   openGraph: {
     type: "website",
     locale: "en_US",
