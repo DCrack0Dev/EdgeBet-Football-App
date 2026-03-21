@@ -4,6 +4,7 @@ import { DashboardClient } from './DashboardClient'
 import { Target, TrendingUp, Award } from 'lucide-react'
 import { Metadata } from 'next'
 import { calculatePerformance } from '@/lib/utils/calculations'
+import { checkIsPremium } from '@/lib/supabase'
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -21,7 +22,7 @@ export default async function Dashboard() {
     .eq('id', session?.user?.id)
     .single()
 
-  const isPremium = profile?.subscriptions?.some((s: any) => s.status === 'premium') || profile?.role === 'admin'
+  const isPremium = checkIsPremium(profile)
 
   // Fetch featured slips
   const { data: featuredSlips } = await supabase

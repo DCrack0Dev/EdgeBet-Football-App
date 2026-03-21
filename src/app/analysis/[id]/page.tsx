@@ -25,7 +25,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { cn } from '@/lib/supabase'
+import { cn, checkIsPremium } from '@/lib/supabase'
 
 export default async function MatchAnalysisDetailPage({ params }: { params: { id: string } }) {
   const supabase = createServerClient()
@@ -47,7 +47,7 @@ export default async function MatchAnalysisDetailPage({ params }: { params: { id
 
   if (!match) notFound()
 
-  const isPremium = profile?.subscriptions?.some((s: any) => s.status === 'premium') || profile?.role === 'admin'
+  const isPremium = checkIsPremium(profile)
   const isLocked = match.premium_analysis && !isPremium
 
   return (

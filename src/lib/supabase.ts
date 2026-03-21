@@ -6,10 +6,32 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY must be defined.');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// --- Subscription Utilities ---
+export function checkIsPremium(profile: Profile | null): boolean {
+  if (!profile) return false;
+  if (profile.role === 'admin') return true;
+  
+  const subscription = profile.subscriptions?.[0];
+  if (!subscription) return false;
+
+  const isPremiumFlag = subscription.is_premium === true;
+  const isStatusPremium = subscription.status === 'premium';
+  
+  // Check if the current period has ended
+  const hasNotExpired = !subscription.current_period_end || 
+    new Date(subscription.current_period_end) > new Date();
+
+  return (isPremiumFlag || isStatusPremium) && hasNotExpired;
+}
 
 // --- Database Types (Normalized) ---
 

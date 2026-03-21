@@ -1,3 +1,4 @@
+import { createAdminClient } from '@/lib/supabase-server'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
@@ -17,11 +18,15 @@ export async function POST(request: Request) {
       return new NextResponse('Fake payments are disabled', { status: 403 })
     }
 
+    // Use admin client for data manipulation
+    const supabaseAdmin = createAdminClient()
+
     // Reset subscription entry
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('subscriptions')
       .update({
         status: 'free',
+        is_premium: false,
         current_period_end: null,
         updated_at: new Date().toISOString()
       })

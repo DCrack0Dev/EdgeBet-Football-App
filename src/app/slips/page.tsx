@@ -6,6 +6,7 @@ import { Calendar, Crown } from 'lucide-react'
 import { SlipsClient } from './SlipsClient'
 import Link from 'next/link'
 import { Metadata } from 'next'
+import { checkIsPremium } from '@/lib/supabase'
 
 export const metadata: Metadata = {
   title: "Daily Slips",
@@ -23,7 +24,7 @@ export default async function SlipsPage() {
     .eq('id', session?.user?.id)
     .single()
 
-  const isPremium = profile?.subscriptions?.some((s: any) => s.status === 'premium') || profile?.role === 'admin'
+  const isPremium = checkIsPremium(profile)
 
   // Fetch all active slips and standalone picks
   const [{ data: slips }, { data: standalonePicks }] = await Promise.all([

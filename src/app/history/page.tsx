@@ -109,9 +109,6 @@ export default async function ResultsHistoryPage() {
     </AppLayout>
   )
 }
-    </AppLayout>
-  )
-}
 
 const ChevronRight = (props: any) => (
   <svg

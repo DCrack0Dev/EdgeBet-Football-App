@@ -4,7 +4,7 @@ import { useState, Suspense } from 'react'
 import { Sidebar } from './Sidebar'
 import { TopNav } from './TopNav'
 import { MobileNav } from './MobileNav'
-import { Profile, cn } from '@/lib/supabase'
+import { Profile, cn, checkIsPremium } from '@/lib/supabase'
 import { X, Zap, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { Skeleton } from './LoadingSkeleton'
@@ -32,7 +32,7 @@ export function AppLayout({ children, profile }: AppLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const isFakeMode = process.env.NEXT_PUBLIC_USE_FAKE_PAYMENTS === 'true'
   
-  const isPremium = profile?.subscriptions?.some((s: any) => s.status === 'premium') || profile?.role === 'admin'
+  const isPremium = checkIsPremium(profile)
   const isAdmin = profile?.role === 'admin'
 
   return (

@@ -1,3 +1,4 @@
+import { createAdminClient } from '@/lib/supabase-server'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
@@ -17,11 +18,14 @@ export async function POST(request: Request) {
       return new NextResponse('Fake payments are disabled', { status: 403 })
     }
 
+    // Use admin client to ensure we can update user status regardless of RLS
+    const supabaseAdmin = createAdminClient()
+
     // Amount and date setup
     const currentPeriodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
 
     // Update or create subscription entry
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('subscriptions')
       .upsert({
         user_id: authUser.id,
