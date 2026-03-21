@@ -8,6 +8,8 @@ import { Profile, cn, checkIsPremium } from '@/lib/supabase'
 import { X, Zap, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { Skeleton } from './LoadingSkeleton'
+import Script from 'next/script'
+import { AdSenseSlot } from './AdSenseSlot'
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -34,6 +36,10 @@ export function AppLayout({ children, profile }: AppLayoutProps) {
   
   const isPremium = checkIsPremium(profile)
   const isAdmin = profile?.role === 'admin'
+  const adsenseEnabled = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === 'true'
+  const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT
+  const adsenseSlotBottom = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM
+  const showAds = adsenseEnabled && !!adsenseClient && !!adsenseSlotBottom && !isPremium && !isAdmin
 
   return (
     <div className="flex min-h-screen bg-background text-white selection:bg-primary selection:text-black">
@@ -58,6 +64,17 @@ export function AppLayout({ children, profile }: AppLayoutProps) {
           <Suspense fallback={<LayoutLoading />}>
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
               {children}
+              {showAds && (
+                <div className="mt-10">
+                  <Script
+                    async
+                    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+                    crossOrigin="anonymous"
+                    strategy="afterInteractive"
+                  />
+                  <AdSenseSlot slot={adsenseSlotBottom} />
+                </div>
+              )}
             </div>
           </Suspense>
         </main>
