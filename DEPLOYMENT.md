@@ -5,7 +5,7 @@ EdgeBet Football is a professional, subscription-based soccer betting insights p
 ## 🚀 Quick Start Checklist
 
 1. [ ] **Supabase Setup**: Database, Auth, and RLS policies.
-2. [ ] **Stripe Setup**: Products, Prices, and Webhooks.
+2. [ ] **Peach Payments Setup**: Entity ID, Secret Token, and Webhooks.
 3. [ ] **Environment Variables**: Configure all secrets in Vercel.
 4. [ ] **Build Verification**: Run `npm run build` locally.
 5. [ ] **Domain Configuration**: Set `NEXT_PUBLIC_SITE_URL`.
@@ -15,7 +15,7 @@ EdgeBet Football is a professional, subscription-based soccer betting insights p
 ## 🛠 Prerequisites
 
 - **Supabase**: A project created at [supabase.com](https://supabase.com).
-- **Stripe**: An account at [stripe.com](https://stripe.com) (Test mode recommended for initial setup).
+- **Peach Payments**: An account at [peachpayments.com](https://peachpayments.com) (Sandbox/Test mode recommended for initial setup).
 - **Vercel**: An account at [vercel.com](https://vercel.com) for hosting.
 
 ---
@@ -31,15 +31,15 @@ EdgeBet Football is a professional, subscription-based soccer betting insights p
 
 ---
 
-## 💳 2. Payments (Stripe)
+## 💳 2. Payments (Peach Payments)
 
-1. **Create Product**: Create a "Premium Subscription" product in Stripe.
-2. **Add Price**: Add a recurring monthly price (e.g., $29.99).
+1. **Entity ID**: Retrieve your **Entity ID** from the Peach Payments Dashboard.
+2. **Secret Token**: Retrieve your **Secret Token** from the Peach Payments Dashboard.
 3. **Webhook**:
-   - Go to Developers -> Webhooks.
-   - Add endpoint: `https://your-domain.com/api/stripe/webhook`.
-   - Listen for: `checkout.session.completed`, `customer.subscription.deleted`, `customer.subscription.updated`.
-   - Copy the **Webhook Secret**.
+   - Go to Checkout -> Settings.
+   - Add endpoint: `https://your-domain.com/api/peach/webhook`.
+   - Ensure the webhook is configured for **Hosted Checkout**.
+   - Copy the **Webhook Secret** (if separate, or use your Secret Token).
 
 ---
 
@@ -52,10 +52,10 @@ Add these to your Vercel project settings:
 | `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase Project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Anon Key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase Service Role Key (Keep secret!) |
-| `STRIPE_SECRET_KEY` | Stripe Secret Key (sk_test_...) |
-| `STRIPE_WEBHOOK_SECRET` | Stripe Webhook Signing Secret (whsec_...) |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe Publishable Key (pk_test_...) |
-| `STRIPE_PREMIUM_PRICE_ID` | The ID of your Stripe price (price_...) |
+| `PEACH_ENTITY_ID` | Peach Payments Entity ID |
+| `PEACH_SECRET_TOKEN` | Peach Payments Secret Token |
+| `PEACH_API_BASE_URL` | Peach API Base URL (Test: https://testsecure.peachpayments.com/checkout/initiate) |
+| `PEACH_WEBHOOK_SECRET` | Peach Payments Webhook Signing Secret |
 | `NEXT_PUBLIC_SITE_URL` | Your production URL (e.g., https://edgebet.com) |
 
 ---

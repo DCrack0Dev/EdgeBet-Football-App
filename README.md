@@ -14,7 +14,7 @@ EdgeBet Football is designed to bridge the gap between casual betting and profes
 
 - **Expert Daily Slips**: Categorized by risk level (Safe, Balanced, Aggressive, Combo).
 - **Match Analysis**: Technical reports, goal trends, and tactical insights.
-- **Premium Content Gating**: Multi-tier access (Free vs. Premium) powered by Stripe.
+- **Premium Content Gating**: Multi-tier access (Free vs. Premium) powered by Peach Payments.
 - **Transparent Audit Log**: Verified history of past performance with filtering.
 - **Personalized Hub**: Save individual picks and slips to your profile.
 - **Real-time Notifications**: Instant alerts for new content and result updates.
@@ -28,7 +28,7 @@ EdgeBet Football is designed to bridge the gap between casual betting and profes
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Database**: [Supabase](https://supabase.com/) (PostgreSQL)
 - **Authentication**: [Supabase Auth](https://supabase.com/auth)
-- **Payments**: [Stripe](https://stripe.com/) (Checkout & Webhooks)
+- **Payments**: [Peach Payments](https://www.peachpayments.com/) (Hosted Checkout & Webhooks)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Animations**: [Tailwind Animate](https://github.com/jamiebuilds/tailwind-animate)
@@ -39,7 +39,7 @@ EdgeBet Football is designed to bridge the gap between casual betting and profes
 
 - Node.js 18.x or higher
 - A Supabase account and project
-- A Stripe account (Test mode recommended for setup)
+- A Peach Payments account (Sandbox/Test mode recommended for setup)
 
 
 Create a `.env.local` file in the root directory and populate it with your credentials:
@@ -50,11 +50,11 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
-# Stripe Configuration
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_PREMIUM_PRICE_ID=price_...
+# Peach Payments Configuration (South Africa)
+PEACH_ENTITY_ID=your_peach_entity_id
+PEACH_SECRET_TOKEN=your_peach_secret_token
+PEACH_API_BASE_URL=https://testsecure.peachpayments.com/checkout/initiate
+PEACH_WEBHOOK_SECRET=your_peach_webhook_secret
 
 # App Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
@@ -66,15 +66,10 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 3. **Auth Redirects**: In Supabase Dashboard -> Auth -> URL Configuration, add `http://localhost:3000/api/auth/callback` to the Redirect URLs.
 
 
-1. Create a "Premium" product in your Stripe Dashboard and copy its **Price ID** to `STRIPE_PREMIUM_PRICE_ID`.
-2. Set up a Webhook pointing to `YOUR_DOMAIN/api/stripe/webhook` (or use Stripe CLI for local testing).
-3. Ensure the webhook listens for the following events:
-   - `checkout.session.completed`
-   - `customer.subscription.created`
-   - `customer.subscription.updated`
-   - `customer.subscription.deleted`
-   - `invoice.paid`
-   - `invoice.payment_failed`
+1. Log in to your Peach Payments Dashboard and retrieve your **Entity ID** and **Secret Token**.
+2. Set up a Webhook in the Peach Dashboard pointing to `YOUR_DOMAIN/api/peach/webhook`.
+3. Ensure the webhook is configured for `Hosted Checkout` and includes the HMAC signature.
+4. For recurring billing, ensure `createRegistration` is supported for your merchant account.
 
 )
 1. Push your code to a GitHub repository.

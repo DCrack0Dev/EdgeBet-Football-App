@@ -45,8 +45,11 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   status subscription_status_enum DEFAULT 'free',
+  is_premium BOOLEAN DEFAULT FALSE,
   stripe_customer_id TEXT,
   stripe_subscription_id TEXT,
+  peach_customer_id TEXT,
+  peach_registration_id TEXT,
   current_period_end TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL

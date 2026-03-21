@@ -81,8 +81,11 @@ export type Subscription = {
   id: string;
   user_id: string;
   status: 'free' | 'premium';
+  is_premium: boolean;
   stripe_customer_id?: string;
   stripe_subscription_id?: string;
+  peach_customer_id?: string;
+  peach_registration_id?: string;
   current_period_end?: string;
   created_at: string;
   updated_at: string;
