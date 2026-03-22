@@ -1,7 +1,6 @@
 import { createServerClient } from '@/lib/supabase-server'
 import { AppLayout } from '@/components/AppLayout'
 import { DashboardClient } from './DashboardClient'
-import { Target, TrendingUp, Award } from 'lucide-react'
 import { Metadata } from 'next'
 import { calculatePerformance } from '@/lib/utils/calculations'
 import { checkIsPremium } from '@/lib/supabase'
@@ -60,10 +59,10 @@ export default async function Dashboard({ searchParams }: { searchParams?: Recor
   const perf = calculatePerformance(allPicksResult.data || [])
 
   const stats = [
-    { name: 'Hit Rate', value: `${perf.hitRate}%`, icon: Target, color: 'text-green-500' },
-    { name: 'Avg. Odds', value: perf.avgOdds, icon: TrendingUp, color: 'text-primary' },
-    { name: 'ROI', value: `${Number(perf.roi) > 0 ? '+' : ''}${perf.roi}%`, icon: Award, color: 'text-secondary' },
-  ]
+    { key: 'hitRate', name: 'Hit Rate', value: `${perf.hitRate}%`, color: 'text-green-500' },
+    { key: 'avgOdds', name: 'Avg. Odds', value: perf.avgOdds, color: 'text-primary' },
+    { key: 'roi', name: 'ROI', value: `${Number(perf.roi) > 0 ? '+' : ''}${perf.roi}%`, color: 'text-secondary' },
+  ] satisfies { key: 'hitRate' | 'avgOdds' | 'roi'; name: string; value: string; color: string }[]
 
   const plain = searchParams?.plain === '1'
   if (plain) {

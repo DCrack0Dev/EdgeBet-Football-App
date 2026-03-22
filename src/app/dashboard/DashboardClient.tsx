@@ -12,13 +12,22 @@ import { Button, cn } from '@/components/Button'
 import { Card, CardHeader, CardTitle, CardContent, Badge } from '@/components/Card'
 import { UpcomingMatchRow } from '@/components/UpcomingMatchRow'
 
+type DashboardStatKey = 'hitRate' | 'avgOdds' | 'roi'
+
+type DashboardStat = {
+  key: DashboardStatKey
+  name: string
+  value: string
+  color: string
+}
+
 interface DashboardClientProps {
   initialPicks: any[];
   initialSlips: any[];
   initialMatches: any[];
   profile: any;
   isPremium: boolean;
-  stats: { name: string; value: string; icon: any; color: string }[];
+  stats: DashboardStat[];
 }
 
 export function DashboardClient({ 
@@ -48,6 +57,12 @@ export function DashboardClient({
   const safeSlip = initialSlips.find(s => s.type === 'safe' && s.status === 'pending')
   const comboSlip = initialSlips.find(s => (s.type === 'combo' || s.type === 'aggressive') && s.status === 'pending')
 
+  const statIconMap: Record<DashboardStatKey, any> = {
+    hitRate: Target,
+    avgOdds: TrendingUp,
+    roi: Award,
+  }
+
   return (
     <div className="space-y-12">
       {showSuccess && (
@@ -69,7 +84,10 @@ export function DashboardClient({
             {stats.map((stat) => (
               <Card key={stat.name} className="flex-1 min-w-[120px] px-4 py-3 bg-white/5 border-white/5 shadow-none hover:border-white/10 transition-all">
                 <div className="flex items-center gap-3">
-                  <stat.icon className={cn('w-5 h-5', stat.color)} />
+                  {(() => {
+                    const Icon = statIconMap[stat.key]
+                    return <Icon className={cn('w-5 h-5', stat.color)} />
+                  })()}
                   <div className="flex flex-col">
                     <span className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">{stat.name}</span>
                     <span className="text-lg font-bold text-white">{stat.value}</span>
