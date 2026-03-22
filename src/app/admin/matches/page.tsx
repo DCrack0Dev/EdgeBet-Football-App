@@ -102,15 +102,23 @@ export default async function ManageMatchesPage() {
                   
                   <div className="flex items-center justify-center gap-6 flex-1">
                     <div className="flex flex-col items-center gap-3 flex-1 text-center">
-                      <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
-                        <Trophy className="w-6 h-6 text-gray-700" />
+                      <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden">
+                        {match.home_team?.logo_url ? (
+                          <img src={match.home_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                        ) : (
+                          <Trophy className="w-6 h-6 text-gray-700" />
+                        )}
                       </div>
                       <span className="text-sm font-black text-white uppercase tracking-tight">{match.home_team?.name}</span>
                     </div>
                     <span className="text-2xl font-black text-gray-800 italic">VS</span>
                     <div className="flex flex-col items-center gap-3 flex-1 text-center">
-                      <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
-                        <Trophy className="w-6 h-6 text-gray-700" />
+                      <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden">
+                        {match.away_team?.logo_url ? (
+                          <img src={match.away_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                        ) : (
+                          <Trophy className="w-6 h-6 text-gray-700" />
+                        )}
                       </div>
                       <span className="text-sm font-black text-white uppercase tracking-tight">{match.away_team?.name}</span>
                     </div>

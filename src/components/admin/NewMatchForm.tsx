@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createBrowserClient } from '@supabase/ssr'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/Card'
@@ -15,15 +15,31 @@ export default function NewMatchForm({ leagues, teams }: { leagues: any[], teams
   const [isFeatured, setIsFeatured] = useState(false)
   const [premiumAnalysis, setPremiumAnalysis] = useState(true)
   const [analysisSummary, setAnalysisSummary] = useState('')
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
-  )
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+
+    if (!leagueId) {
+      alert('Please select a league')
+      setLoading(false)
+      return
+    }
+
+    if (!homeTeamId || !awayTeamId) {
+      alert('Please select both home and away teams')
+      setLoading(false)
+      return
+    }
+
+    if (homeTeamId === awayTeamId) {
+      alert('Home and away teams must be different')
+      setLoading(false)
+      return
+    }
+
+    const supabase = createClientComponentClient()
 
     const { error } = await supabase.from('matches').insert({
       league_id: leagueId,
@@ -39,8 +55,7 @@ export default function NewMatchForm({ leagues, teams }: { leagues: any[], teams
     if (error) {
       alert(error.message)
     } else {
-      router.push('/admin/matches')
-      router.refresh()
+      window.location.href = '/admin/matches?created=1'
     }
     setLoading(false)
   }

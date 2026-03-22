@@ -78,8 +78,12 @@ export default async function MatchAnalysisDetailPage({ params }: { params: { id
 
           <div className="flex items-center justify-center gap-8 md:gap-16 w-full">
             <div className="flex flex-col items-center gap-6 flex-1">
-              <div className="w-24 md:w-32 h-24 md:h-32 bg-white/5 rounded-full flex items-center justify-center border border-white/5 shadow-2xl">
-                <Trophy className="w-12 md:w-16 h-12 md:h-16 text-gray-700" />
+              <div className="w-24 md:w-32 h-24 md:h-32 bg-white/5 rounded-full flex items-center justify-center border border-white/5 shadow-2xl overflow-hidden">
+                {match.home_team?.logo_url ? (
+                  <img src={match.home_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                ) : (
+                  <Trophy className="w-12 md:w-16 h-12 md:h-16 text-gray-700" />
+                )}
               </div>
               <h1 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none">{match.home_team?.name}</h1>
             </div>
@@ -88,8 +92,12 @@ export default async function MatchAnalysisDetailPage({ params }: { params: { id
               <Badge variant="primary" className="text-[10px] font-black uppercase bg-primary/20 tracking-widest">Premium Edge</Badge>
             </div>
             <div className="flex flex-col items-center gap-6 flex-1">
-              <div className="w-24 md:w-32 h-24 md:h-32 bg-white/5 rounded-full flex items-center justify-center border border-white/5 shadow-2xl">
-                <Trophy className="w-12 md:w-16 h-12 md:h-16 text-gray-700" />
+              <div className="w-24 md:w-32 h-24 md:h-32 bg-white/5 rounded-full flex items-center justify-center border border-white/5 shadow-2xl overflow-hidden">
+                {match.away_team?.logo_url ? (
+                  <img src={match.away_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                ) : (
+                  <Trophy className="w-12 md:w-16 h-12 md:h-16 text-gray-700" />
+                )}
               </div>
               <h1 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none">{match.away_team?.name}</h1>
             </div>

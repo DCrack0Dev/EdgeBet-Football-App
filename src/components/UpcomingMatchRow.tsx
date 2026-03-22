@@ -31,11 +31,19 @@ export function UpcomingMatchRow({ match, className }: UpcomingMatchRowProps) {
         {/* Teams */}
         <div className="flex flex-col gap-2 min-w-[140px]">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-white/5 rounded-full flex-shrink-0" />
+            {match.home_team?.logo_url ? (
+              <img src={match.home_team.logo_url} alt="" className="w-5 h-5 object-contain" />
+            ) : (
+              <div className="w-5 h-5 bg-white/5 rounded-full flex-shrink-0" />
+            )}
             <span className="text-xs font-bold text-white group-hover:text-primary transition-colors">{match.home_team?.name}</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-white/5 rounded-full flex-shrink-0" />
+            {match.away_team?.logo_url ? (
+              <img src={match.away_team.logo_url} alt="" className="w-5 h-5 object-contain" />
+            ) : (
+              <div className="w-5 h-5 bg-white/5 rounded-full flex-shrink-0" />
+            )}
             <span className="text-xs font-bold text-white group-hover:text-primary transition-colors">{match.away_team?.name}</span>
           </div>
         </div>

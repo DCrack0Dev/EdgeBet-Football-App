@@ -10,7 +10,8 @@ INSERT INTO leagues (id, name, country, logo_url, is_featured) VALUES
   ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'La Liga', 'Spain', 'https://upload.wikimedia.org/wikipedia/commons/0/0f/LaLiga_logo_2023.svg', true),
   ('c3d4e5f6-a1b2-4c3d-ae4f-5a6b7c8d9e0f', 'Champions League', 'Europe', 'https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg', true),
   ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Serie A', 'Italy', 'https://upload.wikimedia.org/wikipedia/commons/e/e9/Serie_A_logo_2022.svg', true),
-  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Bundesliga', 'Germany', 'https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg', false);
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Bundesliga', 'Germany', 'https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg', false),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Süper Lig', 'Turkey', null, false);
 
 -- 2. Seed Teams
 -- Premier League
@@ -22,16 +23,115 @@ INSERT INTO teams (id, league_id, name, logo_url) VALUES
   ('55555555-5555-5555-5555-555555555555', 'a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Manchester United', 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg'),
   ('66666666-6666-6666-6666-666666666666', 'a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Tottenham Hotspur', 'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg');
 
+INSERT INTO teams (league_id, name) VALUES
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Aston Villa'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Bournemouth'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Brentford'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Brighton & Hove Albion'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Burnley'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Crystal Palace'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Everton'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Fulham'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Luton Town'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Newcastle United'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Nottingham Forest'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Sheffield United'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'West Ham United'),
+  ('a1b2c3d4-e5f6-4a1b-8c2d-3e4f5a6b7c8d', 'Wolverhampton Wanderers');
+
 -- La Liga
 INSERT INTO teams (id, league_id, name, logo_url) VALUES
   ('77777777-7777-7777-7777-777777777777', 'b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Real Madrid', 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg'),
   ('88888888-8888-8888-8888-888888888888', 'b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Barcelona', 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg'),
-  ('99999999-9999-9999-9999-999999999999', 'b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Atletico Madrid', 'https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg');
+  ('99999999-9999-9999-9999-999999999999', 'b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Atlético Madrid', 'https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg');
+
+INSERT INTO teams (league_id, name) VALUES
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Sevilla'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Real Sociedad'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Real Betis'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Villarreal'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Athletic Bilbao'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Valencia'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Girona'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Osasuna'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Celta Vigo'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Getafe'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Mallorca'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Almería'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Cádiz'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Rayo Vallecano'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Granada'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Las Palmas'),
+  ('b2c3d4e5-f6a1-4b2c-9d3e-4f5a6b7c8d9e', 'Espanyol');
 
 -- Bundesliga
 INSERT INTO teams (id, league_id, name, logo_url) VALUES
   ('00000000-0000-0000-0000-000000000001', 'e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Bayern Munich', 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg'),
   ('00000000-0000-0000-0000-000000000002', 'e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Borussia Dortmund', 'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg');
+
+INSERT INTO teams (league_id, name) VALUES
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'RB Leipzig'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Bayer Leverkusen'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Union Berlin'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'SC Freiburg'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Eintracht Frankfurt'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'VfL Wolfsburg'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Borussia Mönchengladbach'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Werder Bremen'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'FC Augsburg'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'VfB Stuttgart'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'FC Köln'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'TSG Hoffenheim'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Mainz 05'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Heidenheim'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Darmstadt 98'),
+  ('e5f6a1b2-c3d4-4e5f-cf6a-7b8c9d0e1f2a', 'Bochum');
+
+-- Serie A
+INSERT INTO teams (league_id, name) VALUES
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Inter Milan'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'AC Milan'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Juventus'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Napoli'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Roma'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Lazio'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Atalanta'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Fiorentina'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Bologna'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Torino'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Sassuolo'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Udinese'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Monza'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Genoa'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Lecce'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Empoli'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Salernitana'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Cagliari'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Verona'),
+  ('d4e5f6a1-b2c3-4d4e-bf5a-6b7c8d9e0f1a', 'Frosinone');
+
+-- Turkish Süper Lig
+INSERT INTO teams (league_id, name) VALUES
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Galatasaray'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Fenerbahçe'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Beşiktaş'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Trabzonspor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Başakşehir'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Adana Demirspor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Kasımpaşa'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Sivasspor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Antalyaspor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Alanyaspor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Gaziantep FK'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Hatayspor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Kayserispor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Konyaspor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Rizespor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Samsunspor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Ankaragücü'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Pendikspor'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'Fatih Karagümrük'),
+  ('f6a1b2c3-d4e5-4f6a-af7b-8c9d0e1f2a3b', 'İstanbulspor');
 
 -- 3. Seed Matches (Upcoming 10-20 Matches)
 INSERT INTO matches (id, league_id, home_team_id, away_team_id, kickoff_time, status, is_featured, premium_analysis, analysis_summary) VALUES

@@ -166,13 +166,33 @@ export default async function AdminDashboard() {
                           <Calendar className="w-4 h-4" />
                           {new Date(match.kickoff_time).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         </div>
-                        <div className="flex flex-col gap-1">
-                          <span className="text-lg font-black text-white group-hover:text-primary transition-colors uppercase italic">
-                            {match.home_team?.name} v {match.away_team?.name}
-                          </span>
-                          <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-                            {match.league?.name} • {new Date(match.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </span>
+                        <div className="flex items-center gap-4">
+                          <div className="flex flex-col items-center gap-2">
+                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center border border-white/10 overflow-hidden">
+                              {match.home_team?.logo_url ? (
+                                <img src={match.home_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                              ) : (
+                                <Trophy className="w-5 h-5 text-gray-700" />
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-lg font-black text-white group-hover:text-primary transition-colors uppercase italic">
+                              {match.home_team?.name} v {match.away_team?.name}
+                            </span>
+                            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                              {match.league?.name} • {new Date(match.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                          <div className="flex flex-col items-center gap-2">
+                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center border border-white/10 overflow-hidden">
+                              {match.away_team?.logo_url ? (
+                                <img src={match.away_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                              ) : (
+                                <Trophy className="w-5 h-5 text-gray-700" />
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
