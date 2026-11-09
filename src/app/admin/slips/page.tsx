@@ -148,7 +148,7 @@ export default async function ManageSlipsPage() {
                   </button>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Link href={`/admin/slips/edit/${slip.id}`}>
+                  <Link href="/admin/slips">
                     <Button variant="outline" size="sm" className="h-9 px-4 border-white/10 font-black text-[9px] uppercase tracking-widest hover:bg-white/5">
                       Edit Slip
                     </Button>

@@ -17,13 +17,12 @@ const getSupabaseAdmin = () => {
 }
 
 export async function POST(req: Request) {
-  const supabaseAdmin = getSupabaseAdmin()
   const body = await req.text()
   const headerList = await headers()
   
-  const timestamp = headerList.get('x-webhook-timestamp') as string
-  const webhookId = headerList.get('x-webhook-id') as string
-  const signature = headerList.get('x-webhook-signature') as string
+  const timestamp = headerList.get('x-webhook-timestamp') || ''
+  const webhookId = headerList.get('x-webhook-id') || ''
+  const signature = headerList.get('x-webhook-signature') || ''
   const secretToken = process.env.PEACH_SECRET_TOKEN
 
   if (!secretToken) {
@@ -33,7 +32,10 @@ export async function POST(req: Request) {
 
   // Peach Checkout sends initial config as JSON, subsequent as form-urlencoded
   // But the signature verification usually applies to the raw body
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || req.headers.get('origin')
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '')
+  if (!siteUrl) {
+    return new NextResponse('Configuration Error', { status: 500 })
+  }
   const webhookUrl = `${siteUrl}/api/peach/webhook`
 
   const isValid = verifyPeachWebhookSignature(
@@ -47,10 +49,10 @@ export async function POST(req: Request) {
 
   if (!isValid) {
     console.error(`[PEACH_WEBHOOK] Signature verification failed`)
-    // In production, you might want to return 400. 
-    // For now, let's log it.
-    // return new NextResponse(`Webhook Error: Invalid Signature`, { status: 400 })
+    return new NextResponse('Webhook Error: Invalid Signature', { status: 401 })
   }
+
+  const supabaseAdmin = getSupabaseAdmin()
 
   // Parse the body
   const params = new URLSearchParams(body)
@@ -60,6 +62,13 @@ export async function POST(req: Request) {
   const registrationId = params.get('registrationId')
   const amount = params.get('amount')
   const currency = params.get('currency')
+
+  const expectedAmount = process.env.PEACH_PREMIUM_AMOUNT || '199.00'
+  const expectedCurrency = process.env.PEACH_CURRENCY || 'ZAR'
+  if (amount !== expectedAmount || currency !== expectedCurrency) {
+    console.error(`[PEACH_WEBHOOK] Unexpected amount or currency: ${amount} ${currency}`)
+    return new NextResponse('Webhook Error: Invalid payment details', { status: 400 })
+  }
 
   console.log(`[PEACH_WEBHOOK] Received event: ${status} for ${merchantTransactionId}`)
 
@@ -71,9 +80,19 @@ export async function POST(req: Request) {
       // Extract userId from merchantTransactionId (we set it as sub_{userId}_{timestamp})
       const userId = merchantTransactionId.split('_')[1]
 
-      if (!userId) {
+      if (!userId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)) {
         console.error('[PEACH_WEBHOOK] No userId in merchantTransactionId')
         return new NextResponse('Missing userId in transaction ID', { status: 400 })
+      }
+
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('id')
+        .eq('id', userId)
+        .maybeSingle()
+
+      if (!profile) {
+        return new NextResponse('Unknown user', { status: 400 })
       }
 
       // Update subscription in Supabase

@@ -25,8 +25,8 @@ export async function proxy(req: NextRequest) {
   })
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+  } = await supabase.auth.getUser()
 
   const isAuthPage = req.nextUrl.pathname.startsWith('/login') || 
                      req.nextUrl.pathname.startsWith('/register') || 
@@ -34,13 +34,13 @@ export async function proxy(req: NextRequest) {
                      req.nextUrl.pathname.startsWith('/reset-password')
 
   // If user is logged in and tries to access an auth page, redirect to dashboard
-  if (session && isAuthPage) {
+  if (user && isAuthPage) {
     return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
   // Protect admin routes
   if (req.nextUrl.pathname.startsWith('/admin')) {
-    if (!session) {
+    if (!user) {
       return NextResponse.redirect(new URL('/login', req.url))
     }
 
@@ -48,7 +48,7 @@ export async function proxy(req: NextRequest) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
-      .eq('id', session.user.id)
+      .eq('id', user.id)
       .single()
 
     if (profile?.role !== 'admin') {
@@ -62,7 +62,7 @@ export async function proxy(req: NextRequest) {
                           req.nextUrl.pathname.startsWith('/saved') ||
                           req.nextUrl.pathname.startsWith('/subscription')
 
-  if (isProtectedRoute && !session) {
+  if (isProtectedRoute && !user) {
     const redirectUrl = new URL('/login', req.url)
     redirectUrl.searchParams.set('redirect', req.nextUrl.pathname)
     return NextResponse.redirect(redirectUrl)

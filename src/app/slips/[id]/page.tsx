@@ -31,7 +31,7 @@ export default async function SlipDetailsPage({ params }: { params: { id: string
 
   const { data: { session } } = await supabase.auth.getSession()
   if (!session?.user) {
-    redirect(`/login?redirect=/slips/${id}/id`)
+    redirect(`/login?redirect=/slips/${id}`)
   }
   
   const { data: profile } = await supabase

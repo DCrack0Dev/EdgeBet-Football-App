@@ -22,6 +22,7 @@ import {
 import Link from 'next/link'
 import { cn } from '@/lib/supabase'
 import { Metadata } from 'next'
+import { RemoteImage } from '@/components/RemoteImage'
 
 export const dynamic = 'force-dynamic'
 
@@ -64,7 +65,7 @@ export default async function ProfilePage() {
             <div className="relative group">
               <div className="w-24 md:w-32 h-24 md:h-32 rounded-[32px] bg-primary/20 flex items-center justify-center border-2 border-primary/30 shadow-2xl shadow-primary/10 overflow-hidden">
                 {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <RemoteImage src={profile.avatar_url} alt="" width={128} height={128} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                 ) : (
                   <User className="w-12 h-12 text-primary" />
                 )}

@@ -163,7 +163,7 @@ export default async function ManagePicksPage() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 border-t lg:border-t-0 lg:border-l border-white/5 pt-6 lg:pt-0 lg:pl-6 w-full lg:w-auto justify-center">
-                  <Link href={`/admin/picks/edit/${pick.id}`}>
+                  <Link href="/admin/picks">
                     <Button variant="outline" size="sm" className="h-10 w-10 p-0 border-white/10 hover:bg-white/5 hover:text-primary">
                       <Edit2 className="w-4 h-4" />
                     </Button>

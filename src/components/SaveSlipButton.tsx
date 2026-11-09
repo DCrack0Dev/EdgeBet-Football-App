@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 import { Bookmark, Check, Loader2 } from 'lucide-react'
 import { Button } from './Button'
 import { cn } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
 
 interface SaveSlipButtonProps {
   slipId: string
@@ -23,10 +24,11 @@ export function SaveSlipButton({
   const [loading, setLoading] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
 
-  const supabase = createBrowserClient(
+  const supabase = useMemo(() => createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
-  )
+  ), [])
+  const router = useRouter()
 
   useEffect(() => {
     async function checkStatus() {
@@ -47,7 +49,7 @@ export function SaveSlipButton({
       }
     }
     checkStatus()
-  }, [slipId, initialIsSaved])
+  }, [initialIsSaved, slipId, supabase])
 
   const toggleSave = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -55,7 +57,7 @@ export function SaveSlipButton({
 
     if (!userId) {
       // Could trigger login modal or redirect
-      window.location.href = '/login'
+      router.push('/login')
       return
     }
 

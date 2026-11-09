@@ -28,6 +28,7 @@ import { Button, cn } from '@/components/Button'
 import { Match, Pick } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
 import { Metadata } from 'next'
+import { RemoteImage } from '@/components/RemoteImage'
 
 export const dynamic = 'force-dynamic'
 
@@ -170,7 +171,7 @@ export default async function AdminDashboard() {
                           <div className="flex flex-col items-center gap-2">
                             <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center border border-white/10 overflow-hidden">
                               {match.home_team?.logo_url ? (
-                                <img src={match.home_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                                <RemoteImage src={match.home_team.logo_url} alt="" width={32} height={32} className="w-2/3 h-2/3 object-contain" />
                               ) : (
                                 <Trophy className="w-5 h-5 text-gray-700" />
                               )}
@@ -187,7 +188,7 @@ export default async function AdminDashboard() {
                           <div className="flex flex-col items-center gap-2">
                             <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center border border-white/10 overflow-hidden">
                               {match.away_team?.logo_url ? (
-                                <img src={match.away_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                                <RemoteImage src={match.away_team.logo_url} alt="" width={32} height={32} className="w-2/3 h-2/3 object-contain" />
                               ) : (
                                 <Trophy className="w-5 h-5 text-gray-700" />
                               )}
@@ -199,7 +200,7 @@ export default async function AdminDashboard() {
                         <Badge variant={match.status === 'finished' ? 'secondary' : 'pending'} className="font-black text-[9px] px-3 h-6 uppercase tracking-widest">
                           {match.status.toUpperCase()}
                         </Badge>
-                        <Link href={`/admin/matches/edit/${match.id}`}>
+                        <Link href="/admin/matches">
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-white/10">
                             <ArrowUpRight className="w-4 h-4" />
                           </Button>
@@ -367,4 +368,3 @@ export default async function AdminDashboard() {
     </AppLayout>
   )
 }
-

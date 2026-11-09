@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import { AppLayout } from '@/components/AppLayout'
@@ -37,11 +37,23 @@ export default function ResultsUpdatePage() {
   const [selectedPicks, setSelectedPicks] = useState<string[]>([])
   const [bulkActionLoading, setBulkActionLoading] = useState(false)
 
-  const supabase = createBrowserClient(
+  const supabase = useMemo(() => createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
-  )
+  ), [])
   const router = useRouter()
+
+  const fetchPicks = useCallback(async () => {
+    setLoading(true)
+    const { data } = await supabase
+      .from('picks')
+      .select('*, match:matches(*, home_team:teams(*), away_team:teams(*), league:leagues(*))')
+      .order('created_at', { ascending: false })
+      .limit(100)
+
+    setPicks(data || [])
+    setLoading(false)
+  }, [supabase])
 
   useEffect(() => {
     async function fetchData() {
@@ -66,20 +78,7 @@ export default function ResultsUpdatePage() {
       fetchPicks()
     }
     fetchData()
-  }, [])
-
-  async function fetchPicks() {
-    setLoading(true)
-    let query = supabase
-      .from('picks')
-      .select('*, match:matches(*, home_team:teams(*), away_team:teams(*), league:leagues(*))')
-      .order('created_at', { ascending: false })
-      .limit(100)
-
-    const { data } = await query
-    setPicks(data || [])
-    setLoading(false)
-  }
+  }, [fetchPicks, router, supabase])
 
   const handleSettle = async (pickId: string, status: 'won' | 'lost' | 'pending' | 'void') => {
     setSettlingId(pickId)

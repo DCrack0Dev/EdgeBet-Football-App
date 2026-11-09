@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Bell, Zap, Trophy, CreditCard, ShieldCheck, X } from 'lucide-react'
 import { Badge } from './Card'
 import { Button, cn } from './Button'
@@ -22,13 +22,32 @@ export function NotificationDropdown() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   
-  const supabase = createBrowserClient(
+  const supabase = useMemo(() => createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
-  )
+  ), [])
+
+  const fetchNotifications = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const { data } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(10)
+
+    if (data) {
+      setNotifications(data as Notification[])
+      setUnreadCount(data.filter(n => !n.is_read).length)
+    }
+  }, [supabase])
 
   useEffect(() => {
-    fetchNotifications()
+    queueMicrotask(() => {
+      void fetchNotifications()
+    })
 
     // Real-time subscription
     const channel = supabase
@@ -46,24 +65,7 @@ export function NotificationDropdown() {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [])
-
-  const fetchNotifications = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-
-    const { data } = await supabase
-      .from('notifications')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(10)
-
-    if (data) {
-      setNotifications(data as Notification[])
-      setUnreadCount(data.filter(n => !n.is_read).length)
-    }
-  }
+  }, [fetchNotifications, supabase])
 
   const markAsRead = async (id: string) => {
     const { error } = await supabase

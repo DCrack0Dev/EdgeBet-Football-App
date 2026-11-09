@@ -39,16 +39,14 @@ export function DashboardClient({
   stats 
 }: DashboardClientProps) {
   const [activeMarket, setActiveMarket] = useState('all')
-  const [showSuccess, setShowSuccess] = useState(false)
   const searchParams = useSearchParams()
+  const [showSuccess, setShowSuccess] = useState(() => searchParams.get('success') === 'true')
 
   useEffect(() => {
-    if (searchParams.get('success') === 'true') {
-      setShowSuccess(true)
-      const timer = setTimeout(() => setShowSuccess(false), 5000)
-      return () => clearTimeout(timer)
-    }
-  }, [searchParams])
+    if (!showSuccess) return
+    const timer = setTimeout(() => setShowSuccess(false), 5000)
+    return () => clearTimeout(timer)
+  }, [showSuccess])
 
   const filteredPicks = activeMarket === 'all' 
     ? initialPicks 

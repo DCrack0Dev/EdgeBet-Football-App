@@ -25,6 +25,7 @@ import {
   Undo2
 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/supabase'
 
 export default function SubscriptionPage() {
@@ -32,6 +33,7 @@ export default function SubscriptionPage() {
   const [loading, setLoading] = useState(true)
   const [checkoutLoading, setCheckoutLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     async function fetchProfile() {
@@ -83,7 +85,7 @@ export default function SubscriptionPage() {
 
       if (isFakeMode) {
         // Instant upgrade for fake mode
-        window.location.href = '/dashboard?success=true'
+        router.push('/dashboard?success=true')
       } else {
         const { url } = await response.json()
         window.location.href = url

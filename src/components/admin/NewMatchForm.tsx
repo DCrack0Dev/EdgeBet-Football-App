@@ -55,7 +55,7 @@ export default function NewMatchForm({ leagues, teams }: { leagues: any[], teams
     if (error) {
       alert(error.message)
     } else {
-      window.location.href = '/admin/matches?created=1'
+      router.push('/admin/matches?created=1')
     }
     setLoading(false)
   }

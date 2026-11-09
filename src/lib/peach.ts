@@ -41,13 +41,17 @@ export const verifyPeachWebhookSignature = (
   signature: string,
   secretToken: string
 ): boolean => {
+  if (!timestamp || !webhookId || !signature || !secretToken) return false
+
   const message = `${timestamp}.${webhookId}.${url}.${payload}`;
   const calculatedSignature = crypto
     .createHmac('sha256', secretToken)
     .update(message)
     .digest('hex');
-  
-  return calculatedSignature === signature;
+
+  const expected = Buffer.from(calculatedSignature, 'utf8')
+  const received = Buffer.from(signature, 'utf8')
+  return expected.length === received.length && crypto.timingSafeEqual(expected, received)
 };
 
 export const initiatePeachCheckout = async (params: PeachCheckoutParams) => {

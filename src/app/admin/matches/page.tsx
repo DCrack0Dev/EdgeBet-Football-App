@@ -19,6 +19,7 @@ import {
 import Link from 'next/link'
 import { Button, cn } from '@/components/Button'
 import { redirect } from 'next/navigation'
+import { RemoteImage } from '@/components/RemoteImage'
 
 export const dynamic = 'force-dynamic'
 
@@ -104,7 +105,7 @@ export default async function ManageMatchesPage() {
                     <div className="flex flex-col items-center gap-3 flex-1 text-center">
                       <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden">
                         {match.home_team?.logo_url ? (
-                          <img src={match.home_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                          <RemoteImage src={match.home_team.logo_url} alt="" width={32} height={32} className="w-2/3 h-2/3 object-contain" />
                         ) : (
                           <Trophy className="w-6 h-6 text-gray-700" />
                         )}
@@ -115,7 +116,7 @@ export default async function ManageMatchesPage() {
                     <div className="flex flex-col items-center gap-3 flex-1 text-center">
                       <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden">
                         {match.away_team?.logo_url ? (
-                          <img src={match.away_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                          <RemoteImage src={match.away_team.logo_url} alt="" width={32} height={32} className="w-2/3 h-2/3 object-contain" />
                         ) : (
                           <Trophy className="w-6 h-6 text-gray-700" />
                         )}
@@ -153,7 +154,7 @@ export default async function ManageMatchesPage() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 border-t md:border-t-0 md:border-l border-white/5 pt-6 md:pt-0 md:pl-6 w-full md:w-auto justify-center">
-                  <Link href={`/admin/matches/edit/${match.id}`}>
+                  <Link href="/admin/matches">
                     <Button variant="outline" size="sm" className="h-10 w-10 p-0 border-white/10 hover:bg-white/5 hover:text-primary">
                       <Edit2 className="w-4 h-4" />
                     </Button>

@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    if (process.env.USE_FAKE_PAYMENTS !== 'true') {
+    if (process.env.NODE_ENV === 'production' || process.env.USE_FAKE_PAYMENTS !== 'true') {
       return new NextResponse('Fake payments are disabled', { status: 403 })
     }
 

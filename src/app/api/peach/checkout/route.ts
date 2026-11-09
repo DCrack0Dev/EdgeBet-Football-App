@@ -15,24 +15,25 @@ export async function POST(request: Request) {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || request.headers.get('origin')
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '')
     const entityId = process.env.PEACH_ENTITY_ID
 
-    if (!entityId) {
-      console.error('[PEACH_ERROR] PEACH_ENTITY_ID is not set')
+    if (!entityId || !siteUrl) {
+      console.error('[PEACH_ERROR] Peach or site URL configuration is missing')
       return new NextResponse('Configuration error: Missing Entity ID', { status: 500 })
     }
 
     // Amount for Premium - in Stripe it was process.env.STRIPE_PREMIUM_PRICE_ID
     // For Peach, we use the actual amount. I'll use a hardcoded value or an env var.
-    const amount = "199.00" // Example price in ZAR
+    const amount = process.env.PEACH_PREMIUM_AMOUNT || '199.00'
+    const currency = process.env.PEACH_CURRENCY || 'ZAR'
     const nonce = crypto.randomBytes(16).toString('hex')
     const merchantTransactionId = `sub_${authUser.id}_${Date.now()}`
 
     const checkoutParams: any = {
       'authentication.entityId': entityId,
       amount: amount,
-      currency: 'ZAR',
+      currency,
       nonce: nonce,
       merchantTransactionId: merchantTransactionId,
       shopperResultUrl: `${siteUrl}/dashboard?success=true`,

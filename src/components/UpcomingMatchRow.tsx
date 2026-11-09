@@ -5,6 +5,7 @@ import { Match, cn } from '@/lib/supabase'
 import { createBrowserClient } from '@supabase/ssr'
 import { Calendar, Clock, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
+import { RemoteImage } from './RemoteImage'
 
 interface UpcomingMatchRowProps {
   match: Match;
@@ -32,7 +33,7 @@ export function UpcomingMatchRow({ match, className }: UpcomingMatchRowProps) {
         <div className="flex flex-col gap-2 min-w-[140px]">
           <div className="flex items-center gap-2">
             {match.home_team?.logo_url ? (
-              <img src={match.home_team.logo_url} alt="" className="w-5 h-5 object-contain" />
+              <RemoteImage src={match.home_team.logo_url} alt="" width={20} height={20} className="w-5 h-5 object-contain" />
             ) : (
               <div className="w-5 h-5 bg-white/5 rounded-full flex-shrink-0" />
             )}
@@ -40,7 +41,7 @@ export function UpcomingMatchRow({ match, className }: UpcomingMatchRowProps) {
           </div>
           <div className="flex items-center gap-2">
             {match.away_team?.logo_url ? (
-              <img src={match.away_team.logo_url} alt="" className="w-5 h-5 object-contain" />
+              <RemoteImage src={match.away_team.logo_url} alt="" width={20} height={20} className="w-5 h-5 object-contain" />
             ) : (
               <div className="w-5 h-5 bg-white/5 rounded-full flex-shrink-0" />
             )}

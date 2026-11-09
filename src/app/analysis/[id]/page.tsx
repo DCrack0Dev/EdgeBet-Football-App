@@ -26,6 +26,7 @@ import {
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { cn, checkIsPremium } from '@/lib/supabase'
+import { RemoteImage } from '@/components/RemoteImage'
 
 export default async function MatchAnalysisDetailPage({ params }: { params: { id: string } }) {
   const supabase = await createServerClient()
@@ -80,7 +81,7 @@ export default async function MatchAnalysisDetailPage({ params }: { params: { id
             <div className="flex flex-col items-center gap-6 flex-1">
               <div className="w-24 md:w-32 h-24 md:h-32 bg-white/5 rounded-full flex items-center justify-center border border-white/5 shadow-2xl overflow-hidden">
                 {match.home_team?.logo_url ? (
-                  <img src={match.home_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                  <RemoteImage src={match.home_team.logo_url} alt="" width={96} height={96} className="w-2/3 h-2/3 object-contain" />
                 ) : (
                   <Trophy className="w-12 md:w-16 h-12 md:h-16 text-gray-700" />
                 )}
@@ -94,7 +95,7 @@ export default async function MatchAnalysisDetailPage({ params }: { params: { id
             <div className="flex flex-col items-center gap-6 flex-1">
               <div className="w-24 md:w-32 h-24 md:h-32 bg-white/5 rounded-full flex items-center justify-center border border-white/5 shadow-2xl overflow-hidden">
                 {match.away_team?.logo_url ? (
-                  <img src={match.away_team.logo_url} alt="" className="w-2/3 h-2/3 object-contain" />
+                  <RemoteImage src={match.away_team.logo_url} alt="" width={96} height={96} className="w-2/3 h-2/3 object-contain" />
                 ) : (
                   <Trophy className="w-12 md:w-16 h-12 md:h-16 text-gray-700" />
                 )}

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { Button, cn } from '@/components/Button'
 import { NotificationDropdown } from './NotificationDropdown'
+import { RemoteImage } from './RemoteImage'
 import { Profile } from '@/lib/supabase'
 
 interface TopNavProps {
@@ -86,7 +87,7 @@ export function TopNav({ profile, isPremium, onMobileMenuToggle }: TopNavProps) 
               >
                 <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/20">
                   {profile?.avatar_url ? (
-                    <img src={profile.avatar_url} alt="" className="w-full h-full object-cover rounded-xl" />
+                    <RemoteImage src={profile.avatar_url} alt="" width={40} height={40} className="w-full h-full object-cover rounded-xl" />
                   ) : (
                     <User className="w-5 h-5 text-primary" />
                   )}
