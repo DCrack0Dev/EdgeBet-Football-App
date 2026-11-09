@@ -75,10 +75,10 @@ export default async function ManageSlipsPage() {
             />
           </div>
           
-          <div className="flex items-center gap-3 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 no-scrollbar">
-            <div className="flex items-center gap-2 p-1.5 bg-white/5 rounded-2xl border border-white/10 shrink-0">
+          <div className="grid grid-cols-2 items-stretch gap-3 w-full lg:w-auto lg:flex lg:items-center">
+            <div className="flex min-w-0 items-center gap-2 p-1.5 bg-white/5 rounded-2xl border border-white/10">
               <Filter className="w-3.5 h-3.5 text-gray-500 ml-2" />
-              <select className="bg-transparent text-[10px] font-black uppercase tracking-widest text-gray-400 focus:outline-none pr-4 cursor-pointer">
+              <select className="w-full min-w-0 bg-transparent text-[10px] font-black uppercase tracking-widest text-gray-400 focus:outline-none pr-1 cursor-pointer">
                 <option value="">All Types</option>
                 <option value="safe">Safe</option>
                 <option value="balanced">Balanced</option>
@@ -87,9 +87,9 @@ export default async function ManageSlipsPage() {
               </select>
             </div>
             
-            <div className="flex items-center gap-2 p-1.5 bg-white/5 rounded-2xl border border-white/10 shrink-0">
+            <div className="flex min-w-0 items-center gap-2 p-1.5 bg-white/5 rounded-2xl border border-white/10">
               <Lock className="w-3.5 h-3.5 text-gray-500 ml-2" />
-              <select className="bg-transparent text-[10px] font-black uppercase tracking-widest text-gray-400 focus:outline-none pr-4 cursor-pointer">
+              <select className="w-full min-w-0 bg-transparent text-[10px] font-black uppercase tracking-widest text-gray-400 focus:outline-none pr-1 cursor-pointer">
                 <option value="">All Access</option>
                 <option value="free">Free</option>
                 <option value="premium">Premium</option>

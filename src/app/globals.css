@@ -78,6 +78,53 @@ canvas {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+@media (max-width: 639px) {
+  .app-shell h1,
+  .app-shell h2,
+  .app-shell h3 {
+    overflow-wrap: anywhere;
+  }
+
+  .app-shell h1.text-5xl,
+  .app-shell h1.text-4xl,
+  .app-shell h1.text-3xl {
+    font-size: clamp(1.75rem, 8vw, 2.25rem) !important;
+    line-height: 0.98 !important;
+  }
+
+  .app-shell h2.text-4xl,
+  .app-shell h2.text-3xl {
+    font-size: clamp(1.4rem, 6vw, 1.9rem) !important;
+    line-height: 1.05 !important;
+  }
+
+  .app-shell .p-8,
+  .app-shell .p-6 {
+    padding: 1rem !important;
+  }
+
+  .app-shell .px-8 {
+    padding-inline: 1rem !important;
+  }
+
+  .app-shell .gap-8,
+  .app-shell .gap-6 {
+    gap: 1rem !important;
+  }
+
+  .app-shell input,
+  .app-shell select,
+  .app-shell textarea {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .app-shell button,
+  .app-shell a {
+    max-width: 100%;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

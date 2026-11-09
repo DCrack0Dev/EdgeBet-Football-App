@@ -109,7 +109,7 @@ export function SlipsClient({ initialSlips, initialPicks, isPremium }: SlipsClie
       {/* Controls Area */}
       <div className="space-y-6">
         {/* Main Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+        <div className="flex flex-wrap items-center gap-2 pb-2">
           {tabs.map((tab) => {
             const IsActive = activeTab === tab.id
             return (
@@ -117,7 +117,7 @@ export function SlipsClient({ initialSlips, initialPicks, isPremium }: SlipsClie
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "flex items-center gap-2 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] whitespace-nowrap transition-all border shrink-0",
+                  "flex items-center gap-2 px-3 sm:px-5 py-2.5 sm:py-3 rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] whitespace-normal transition-all border",
                   IsActive 
                     ? "bg-primary text-black border-primary shadow-[0_0_20px_rgba(212,175,55,0.2)]" 
                     : "bg-white/5 text-gray-400 border-white/5 hover:border-white/10 hover:text-white"

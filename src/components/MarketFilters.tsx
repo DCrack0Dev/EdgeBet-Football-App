@@ -27,7 +27,7 @@ interface MarketFiltersProps {
 
 export function MarketFilters({ activeFilter, onFilterChange, className }: MarketFiltersProps) {
   return (
-    <div className={cn("flex items-center gap-2 overflow-x-auto pb-4 no-scrollbar", className)}>
+    <div className={cn("flex flex-wrap items-center gap-2 pb-4", className)}>
       {MARKETS.map((market) => {
         const isActive = activeFilter === market.id
         return (
@@ -35,7 +35,7 @@ export function MarketFilters({ activeFilter, onFilterChange, className }: Marke
             key={market.id}
             onClick={() => onFilterChange(market.id)}
             className={cn(
-              "flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all border",
+              "flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl text-[10px] sm:text-xs font-black uppercase tracking-widest whitespace-normal transition-all border",
               isActive 
                 ? "bg-primary text-black border-primary shadow-[0_0_15px_rgba(212,175,55,0.3)]" 
                 : "bg-white/5 text-gray-400 border-white/5 hover:border-white/10 hover:text-white"
