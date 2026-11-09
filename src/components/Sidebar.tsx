@@ -8,9 +8,11 @@ import { Zap } from 'lucide-react'
 
 interface SidebarProps {
   role?: string;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export function Sidebar({ role }: SidebarProps) {
+export function Sidebar({ role, isOpen = false, onClose }: SidebarProps) {
   const pathname = usePathname()
   const isAdmin = role === 'admin'
 
@@ -21,6 +23,7 @@ export function Sidebar({ role }: SidebarProps) {
         <Link
           key={item.href}
           href={item.href}
+          onClick={onClose}
           className={cn(
             'flex items-center gap-3 px-4 py-3 text-sm font-bold transition-all rounded-xl mb-1 group',
             isActive 
@@ -39,7 +42,20 @@ export function Sidebar({ role }: SidebarProps) {
   }
 
   return (
-    <aside className="w-72 shrink-0 bg-card border-r border-white/5 h-screen sticky top-0 hidden lg:flex flex-col p-6 overflow-y-auto scrollbar-ui">
+    <>
+      {isOpen && (
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      <aside className={cn(
+        'w-72 shrink-0 bg-card border-r border-white/5 h-screen sticky top-0 flex flex-col p-6 overflow-y-auto scrollbar-ui',
+        'fixed inset-y-0 left-0 z-50 transform transition-transform duration-200 lg:static lg:z-auto lg:translate-x-0',
+        isOpen ? 'translate-x-0' : '-translate-x-full lg:flex'
+      )}>
       <div className="mb-10 px-2">
         <Link href="/" className="flex items-center gap-2 group">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
@@ -70,6 +86,7 @@ export function Sidebar({ role }: SidebarProps) {
           <button className="mt-3 text-xs font-bold text-white hover:text-primary transition-colors">Open Support Ticket</button>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   )
 }

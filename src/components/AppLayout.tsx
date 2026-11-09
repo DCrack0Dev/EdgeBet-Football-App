@@ -44,7 +44,11 @@ export function AppLayout({ children, profile }: AppLayoutProps) {
   return (
     <div className="flex min-h-screen min-w-0 max-w-full overflow-x-clip bg-background text-white selection:bg-primary selection:text-black">
       {/* Desktop Sidebar */}
-      <Sidebar role={profile?.role} />
+      <Sidebar
+        role={profile?.role}
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">

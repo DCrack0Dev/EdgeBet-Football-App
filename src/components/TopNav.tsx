@@ -49,6 +49,8 @@ export function TopNav({ profile, isPremium, onMobileMenuToggle }: TopNavProps) 
             variant="ghost" 
             size="sm" 
             className="lg:hidden p-2"
+            type="button"
+            aria-label="Open navigation menu"
             onClick={onMobileMenuToggle}
           >
             <Menu className="w-6 h-6" />
