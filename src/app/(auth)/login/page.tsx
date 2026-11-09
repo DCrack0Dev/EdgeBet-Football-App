@@ -44,8 +44,15 @@ function LoginForm() {
       window.clearTimeout(timeoutId)
 
       if (!res.ok) {
-        const text = await res.text()
-        throw new Error(text || 'Login failed')
+        const raw = await res.text()
+        let message = raw || 'Login failed'
+        try {
+          const payload = JSON.parse(raw)
+          message = payload?.error || payload?.message || message
+        } catch {
+          // Keep the raw response as a fallback for non-JSON server errors.
+        }
+        throw new Error(message)
       }
 
       const who = await fetch('/api/auth/whoami', { cache: 'no-store' })
@@ -54,7 +61,7 @@ function LoginForm() {
         throw new Error('Signed in, but session cookie was not set. Check Supabase Auth Site URL/Redirect URLs and redeploy.')
       }
 
-      window.location.href = redirect || '/dashboard'
+      router.push(redirect || '/dashboard')
     } catch (e: any) {
       const msg =
         e?.name === 'AbortError'

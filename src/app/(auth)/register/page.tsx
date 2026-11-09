@@ -1,9 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { AuthLayout } from '@/components/AuthLayout'
 import { Button } from '@/components/Button'
 import { AlertCircle, ArrowRight, Mail, Lock, User, CheckCircle2 } from 'lucide-react'
@@ -17,7 +15,6 @@ export default function Register() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
-  const router = useRouter()
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,37 +27,29 @@ export default function Register() {
       return
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-    if (!supabaseUrl || !supabaseAnonKey) {
-      setError('Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.')
-      setLoading(false)
-      return
-    }
-
     try {
-      const supabase = createClientComponentClient()
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-          },
-          emailRedirectTo: `${window.location.origin}/api/auth/callback`,
-        },
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, fullName }),
       })
 
-      if (error) {
-        setError(error.message)
-        setLoading(false)
-      } else {
-        setSuccess(true)
-        setLoading(false)
+      const raw = await response.text()
+      let payload: { error?: string } = {}
+      try {
+        payload = raw ? JSON.parse(raw) : {}
+      } catch {
+        payload = { error: 'The server returned an invalid response. Please try again.' }
       }
+
+      if (!response.ok) {
+        throw new Error(payload.error || 'Registration failed')
+      }
+
+      setSuccess(true)
     } catch (e: any) {
       setError(e?.message || 'Registration failed')
+    } finally {
       setLoading(false)
     }
   }
