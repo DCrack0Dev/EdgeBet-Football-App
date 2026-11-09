@@ -41,8 +41,8 @@ export function TopNav({ profile, isPremium, onMobileMenuToggle }: TopNavProps) 
   }
 
   return (
-    <header className="h-20 bg-background/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-40 px-4 md:px-8">
-      <div className="h-full flex items-center justify-between gap-4">
+    <header className="h-20 min-w-0 max-w-full overflow-x-clip bg-background/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-40 px-4 md:px-8">
+      <div className="h-full min-w-0 flex items-center justify-between gap-3">
         {/* Mobile Toggle & Search */}
         <div className="flex items-center gap-4 flex-1">
           <Button 
@@ -65,7 +65,7 @@ export function TopNav({ profile, isPremium, onMobileMenuToggle }: TopNavProps) 
         </div>
 
         {/* User Actions */}
-        <div className="flex items-center gap-2 md:gap-6">
+        <div className="flex shrink-0 items-center gap-2 md:gap-6">
           {isPremium ? (
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
               <Crown className="w-4 h-4 text-primary fill-current" />

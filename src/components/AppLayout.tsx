@@ -42,7 +42,7 @@ export function AppLayout({ children, profile }: AppLayoutProps) {
   const showAds = adsenseEnabled && !!adsenseClient && !!adsenseSlotBottom && !isPremium && !isAdmin
 
   return (
-    <div className="flex min-h-screen bg-background text-white selection:bg-primary selection:text-black">
+    <div className="flex min-h-screen min-w-0 max-w-full overflow-x-clip bg-background text-white selection:bg-primary selection:text-black">
       {/* Desktop Sidebar */}
       <Sidebar role={profile?.role} />
 
@@ -60,7 +60,7 @@ export function AppLayout({ children, profile }: AppLayoutProps) {
           onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
         />
 
-        <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8 max-w-7xl mx-auto w-full">
+        <main className="flex-1 min-w-0 max-w-full overflow-x-clip p-4 md:p-8 pb-24 lg:pb-8 max-w-7xl mx-auto w-full">
           <Suspense fallback={<LayoutLoading />}>
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
               {children}

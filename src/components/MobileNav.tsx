@@ -12,8 +12,8 @@ export function MobileNav() {
   const mobileItems = MAIN_NAV_ITEMS.slice(0, 5)
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-card/80 backdrop-blur-xl border-t border-white/5 z-50 px-2 pb-safe-area-inset-bottom">
-      <div className="flex items-center justify-around h-16">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 w-auto max-w-full overflow-x-clip bg-card/90 backdrop-blur-xl border-t border-white/5 z-50 px-2 pb-safe-area-inset-bottom">
+      <div className="flex min-w-0 items-center justify-around h-16">
         {mobileItems.map((item) => {
           const isActive = pathname === item.href
           return (

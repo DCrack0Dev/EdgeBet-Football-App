@@ -39,7 +39,7 @@ export function Sidebar({ role }: SidebarProps) {
   }
 
   return (
-    <aside className="w-72 bg-card border-r border-white/5 h-screen sticky top-0 hidden lg:flex flex-col p-6 overflow-y-auto">
+    <aside className="w-72 shrink-0 bg-card border-r border-white/5 h-screen sticky top-0 hidden lg:flex flex-col p-6 overflow-y-auto scrollbar-ui">
       <div className="mb-10 px-2">
         <Link href="/" className="flex items-center gap-2 group">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">

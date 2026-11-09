@@ -78,9 +78,9 @@ export function DashboardClient({
             <p className="text-gray-400 font-medium">Your daily edge for today's top fixtures is ready.</p>
           </div>
           
-          <div className="flex gap-4">
+          <div className="grid grid-cols-2 gap-3 md:flex md:gap-4">
             {stats.map((stat) => (
-              <Card key={stat.name} className="flex-1 min-w-[120px] px-4 py-3 bg-white/5 border-white/5 shadow-none hover:border-white/10 transition-all">
+              <Card key={stat.name} className="min-w-0 px-3 py-3 md:flex-1 md:px-4 bg-white/5 border-white/5 shadow-none hover:border-white/10 transition-all">
                 <div className="flex items-center gap-3">
                   {(() => {
                     const Icon = statIconMap[stat.key]

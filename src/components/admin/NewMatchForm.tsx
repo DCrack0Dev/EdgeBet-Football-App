@@ -82,7 +82,7 @@ export default function NewMatchForm({ leagues, teams }: { leagues: any[], teams
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-400">Home Team</label>
               <select 

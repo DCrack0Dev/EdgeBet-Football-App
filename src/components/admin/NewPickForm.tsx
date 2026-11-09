@@ -76,7 +76,7 @@ export default function NewPickForm({ matches }: { matches: any[] }) {
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-400">Selection Type</label>
               <select 
@@ -106,7 +106,7 @@ export default function NewPickForm({ matches }: { matches: any[] }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-400">Market Primary</label>
               <input 
@@ -130,7 +130,7 @@ export default function NewPickForm({ matches }: { matches: any[] }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-400">Odds</label>
               <input 
