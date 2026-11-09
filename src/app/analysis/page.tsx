@@ -26,6 +26,7 @@ export default async function AnalysisPage() {
     .from('matches')
     .select('*, league:leagues(*), home_team:teams(*), away_team:teams(*)')
     .eq('status', 'scheduled')
+    .gte('kickoff_time', new Date().toISOString())
     .order('kickoff_time', { ascending: true })
     .limit(20)
 

@@ -3,7 +3,6 @@ import { AppLayout } from '@/components/AppLayout'
 import { Card, CardHeader, CardTitle, CardContent, Badge } from '@/components/Card'
 import { 
   Trophy, 
-  Plus, 
   Search, 
   Filter, 
   Calendar, 
@@ -20,6 +19,7 @@ import Link from 'next/link'
 import { Button, cn } from '@/components/Button'
 import { redirect } from 'next/navigation'
 import { RemoteImage } from '@/components/RemoteImage'
+import FixtureSyncControls from '@/components/admin/FixtureSyncControls'
 
 export const dynamic = 'force-dynamic'
 
@@ -42,7 +42,8 @@ export default async function ManageMatchesPage() {
   const { data: matches } = await supabase
     .from('matches')
     .select('*, league:leagues(*), home_team:teams(*), away_team:teams(*)')
-    .order('kickoff_time', { ascending: false })
+    .gte('kickoff_time', new Date().toISOString())
+    .order('kickoff_time', { ascending: true })
 
   const { data: leagues } = await supabase.from('leagues').select('*').order('name')
 
@@ -52,14 +53,10 @@ export default async function ManageMatchesPage() {
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-8">
           <div>
             <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tighter uppercase italic leading-none">Manage Matches</h1>
-            <p className="text-gray-400 font-medium text-sm sm:text-lg mt-3 max-w-2xl leading-relaxed">Schedule upcoming fixtures and manage technical analysis gating.</p>
+            <p className="text-gray-400 font-medium text-sm sm:text-lg mt-3 max-w-2xl leading-relaxed">Sync fixtures by date, then create picks from the imported matches.</p>
           </div>
           
-          <Link href="/admin/matches/new" className="w-full md:w-auto">
-            <Button variant="primary" className="h-11 sm:h-12 w-full md:w-auto px-4 sm:px-8 font-black text-[10px] tracking-widest uppercase gap-2 shadow-lg shadow-primary/10">
-              <Plus className="w-4 h-4" /> Create New Match
-            </Button>
-          </Link>
+          <FixtureSyncControls />
         </header>
 
         {/* Filters & Search */}

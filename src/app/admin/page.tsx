@@ -85,7 +85,8 @@ export default async function AdminDashboard() {
   const { data: recentMatches } = await supabase
     .from('matches')
     .select('*, home_team:teams(*), away_team:teams(*), league:leagues(*)')
-    .order('kickoff_time', { ascending: false })
+    .gte('kickoff_time', new Date().toISOString())
+    .order('kickoff_time', { ascending: true })
     .limit(5)
 
   // Recent Picks

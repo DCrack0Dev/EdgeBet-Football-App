@@ -17,6 +17,7 @@ export default async function NewPickPage() {
   const { data: matches } = await supabase
     .from('matches')
     .select('*, home_team:teams!matches_home_team_id_fkey(*), away_team:teams!matches_away_team_id_fkey(*)')
+    .gte('kickoff_time', new Date().toISOString())
     .order('kickoff_time', { ascending: true })
 
   return (
