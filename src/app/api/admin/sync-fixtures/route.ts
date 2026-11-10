@@ -3,6 +3,7 @@ import { createHash } from 'crypto'
 import { createAdminClient, createServerClient } from '@/lib/supabase-server'
 
 const API_URL = 'https://v3.football.api-sports.io/fixtures'
+const RAPIDAPI_URL = 'https://api-football-v1.p.rapidapi.com/v3/fixtures'
 
 function stableUuid(namespace: string, id: number | string) {
   const hex = createHash('sha1').update(`${namespace}:${id}`).digest('hex').slice(0, 32)
@@ -44,13 +45,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Choose a valid fixture date in YYYY-MM-DD format.' }, { status: 400 })
     }
 
+    const rapidApiKey = process.env.RAPIDAPI_KEY
     const apiKey = process.env.API_FOOTBALL_KEY
-    if (!apiKey) {
-      return NextResponse.json({ error: 'API_FOOTBALL_KEY is not configured on the server.' }, { status: 503 })
+    if (!rapidApiKey && !apiKey) {
+      return NextResponse.json({ error: 'Configure RAPIDAPI_KEY (preferred) or API_FOOTBALL_KEY on the server.' }, { status: 503 })
     }
 
-    const apiResponse = await fetch(`${API_URL}?date=${body.date}&timezone=UTC`, {
-      headers: { 'x-apisports-key': apiKey },
+    const isRapidApi = Boolean(rapidApiKey)
+    const apiResponse = await fetch(`${isRapidApi ? RAPIDAPI_URL : API_URL}?date=${body.date}&timezone=UTC`, {
+      headers: isRapidApi
+        ? { 'x-rapidapi-key': rapidApiKey as string, 'x-rapidapi-host': 'api-football-v1.p.rapidapi.com' }
+        : { 'x-apisports-key': apiKey as string },
       cache: 'no-store',
     })
     const payload = await apiResponse.json().catch(() => null)

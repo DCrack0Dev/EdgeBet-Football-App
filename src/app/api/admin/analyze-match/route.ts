@@ -3,12 +3,15 @@ import { createAdminClient, createServerClient } from '@/lib/supabase-server'
 import { buildMatchAnalysis } from '@/lib/match-analysis'
 
 const API_BASE = 'https://v3.football.api-sports.io'
+const RAPIDAPI_BASE = 'https://api-football-v1.p.rapidapi.com/v3'
 
 type ProviderPayload = { response?: any[]; errors?: Record<string, string> }
 
-async function providerGet(path: string, apiKey: string): Promise<any[]> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    headers: { 'x-apisports-key': apiKey },
+async function providerGet(path: string, credentials: { apiKey: string; rapidApi: boolean }): Promise<any[]> {
+  const response = await fetch(`${credentials.rapidApi ? RAPIDAPI_BASE : API_BASE}${path}`, {
+    headers: credentials.rapidApi
+      ? { 'x-rapidapi-key': credentials.apiKey, 'x-rapidapi-host': 'api-football-v1.p.rapidapi.com' }
+      : { 'x-apisports-key': credentials.apiKey },
     cache: 'no-store',
   })
   const payload = await response.json() as ProviderPayload
@@ -40,8 +43,11 @@ export async function POST(request: Request) {
     const body = await request.json().catch(() => ({}))
     if (!body.matchId || typeof body.matchId !== 'string') return NextResponse.json({ error: 'A match is required.' }, { status: 400 })
 
-    const apiKey = process.env.API_FOOTBALL_KEY
-    if (!apiKey) return NextResponse.json({ error: 'API_FOOTBALL_KEY is not configured on the server.' }, { status: 503 })
+    const rapidApiKey = process.env.RAPIDAPI_KEY
+    const directApiKey = process.env.API_FOOTBALL_KEY
+    const apiKey = rapidApiKey || directApiKey
+    if (!apiKey) return NextResponse.json({ error: 'Configure RAPIDAPI_KEY (preferred) or API_FOOTBALL_KEY on the server.' }, { status: 503 })
+    const credentials = { apiKey, rapidApi: Boolean(rapidApiKey) }
 
     const { data: match, error: matchError } = await supabase
       .from('matches')
@@ -57,12 +63,12 @@ export async function POST(request: Request) {
 
     const season = metadata.season || new Date(match.kickoff_time).getUTCFullYear()
     const [homeFormFixtures, awayFormFixtures, h2hFixtures, injuries, homePlayers, awayPlayers] = await Promise.all([
-      providerGet(`/fixtures?team=${metadata.homeTeamId}&last=5`, apiKey),
-      providerGet(`/fixtures?team=${metadata.awayTeamId}&last=5`, apiKey),
-      providerGet(`/fixtures/headtohead?h2h=${metadata.homeTeamId}-${metadata.awayTeamId}&last=10`, apiKey),
-      providerGet(`/injuries?fixture=${metadata.fixtureId}`, apiKey),
-      providerGet(`/players?team=${metadata.homeTeamId}&season=${season}`, apiKey),
-      providerGet(`/players?team=${metadata.awayTeamId}&season=${season}`, apiKey),
+      providerGet(`/fixtures?team=${metadata.homeTeamId}&last=5`, credentials),
+      providerGet(`/fixtures?team=${metadata.awayTeamId}&last=5`, credentials),
+      providerGet(`/fixtures/headtohead?h2h=${metadata.homeTeamId}-${metadata.awayTeamId}&last=10`, credentials),
+      providerGet(`/injuries?fixture=${metadata.fixtureId}`, credentials),
+      providerGet(`/players?team=${metadata.homeTeamId}&season=${season}`, credentials),
+      providerGet(`/players?team=${metadata.awayTeamId}&season=${season}`, credentials),
     ])
 
     let news: Array<{ title?: string; description?: string }> = []
