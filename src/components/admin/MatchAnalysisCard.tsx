@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BrainCircuit, RefreshCw, ShieldCheck, TrendingUp } from 'lucide-react'
+import { BrainCircuit, CheckCircle2, RefreshCw, ShieldCheck, TrendingUp, X } from 'lucide-react'
 import { Button } from '@/components/Button'
 import { Card } from '@/components/Card'
 
@@ -10,6 +10,7 @@ type Props = {
   homeName: string
   awayName: string
   initialSummary?: string | null
+  availableSlips: Array<{ id: string; title: string; type: string; total_odds?: number | null }>
 }
 
 function readAnalysis(summary?: string | null) {
@@ -22,14 +23,21 @@ function readAnalysis(summary?: string | null) {
   }
 }
 
-export default function MatchAnalysisCard({ matchId, homeName, awayName, initialSummary }: Props) {
+export default function MatchAnalysisCard({ matchId, homeName, awayName, initialSummary, availableSlips }: Props) {
   const [analysis, setAnalysis] = useState<any>(() => readAnalysis(initialSummary))
   const [loading, setLoading] = useState(false)
+  const [publishingRank, setPublishingRank] = useState<number | null>(null)
+  const [selectedRecommendation, setSelectedRecommendation] = useState<any>(null)
+  const [slipId, setSlipId] = useState('')
+  const [newSlipTitle, setNewSlipTitle] = useState('')
+  const [premiumOnly, setPremiumOnly] = useState(false)
+  const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
   const analyze = async () => {
     setLoading(true)
     setError('')
+    setMessage('')
     try {
       const response = await fetch('/api/admin/analyze-match', {
         method: 'POST',
@@ -43,6 +51,45 @@ export default function MatchAnalysisCard({ matchId, homeName, awayName, initial
       setError(analysisError instanceof Error ? analysisError.message : 'Unable to analyze match.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const openPublish = (recommendation: any) => {
+    setSelectedRecommendation(recommendation)
+    setSlipId('')
+    setNewSlipTitle('')
+    setMessage('')
+    setError('')
+  }
+
+  const publish = async () => {
+    if (!selectedRecommendation || (!slipId && !newSlipTitle.trim())) {
+      setError('Select an existing slip or enter a title for a new slip.')
+      return
+    }
+    setPublishingRank(selectedRecommendation.rank)
+    setError('')
+    setMessage('')
+    try {
+      const response = await fetch('/api/admin/publish-prediction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          matchId,
+          recommendation: selectedRecommendation,
+          slipId: slipId || undefined,
+          newSlipTitle: newSlipTitle || undefined,
+          premiumOnly,
+        }),
+      })
+      const payload = await response.json()
+      if (!response.ok) throw new Error(payload.error || 'Unable to publish prediction.')
+      setMessage(`Published to slip. Estimated fair odds: ${payload.estimatedOdds}.`)
+      setSelectedRecommendation(null)
+    } catch (publishError) {
+      setError(publishError instanceof Error ? publishError.message : 'Unable to publish prediction.')
+    } finally {
+      setPublishingRank(null)
     }
   }
 
@@ -62,6 +109,7 @@ export default function MatchAnalysisCard({ matchId, homeName, awayName, initial
       </div>
 
       {error && <p className="mt-3 text-xs font-bold text-red-400">{error}</p>}
+      {message && <p className="mt-3 flex items-center gap-2 text-xs font-bold text-green-400"><CheckCircle2 className="h-4 w-4" />{message}</p>}
 
       {analysis && (
         <div className="mt-4 space-y-3">
@@ -85,8 +133,38 @@ export default function MatchAnalysisCard({ matchId, homeName, awayName, initial
                   <ShieldCheck className="h-3 w-3 text-green-500" /> {recommendation.risk} risk · {recommendation.confidence}/10
                 </div>
                 <p className="mt-2 text-[10px] leading-relaxed text-gray-500">{recommendation.rationale[0]}</p>
+                <Button type="button" variant="primary" onClick={() => openPublish(recommendation)} className="mt-3 h-8 w-full text-[9px] font-black uppercase tracking-widest">
+                  Select & Publish to Slip
+                </Button>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {selectedRecommendation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-card p-5 shadow-2xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Publish prediction</p>
+                <h3 className="mt-1 text-lg font-black uppercase italic text-white">{selectedRecommendation.selection}</h3>
+                <p className="mt-1 text-xs text-gray-500">The complete pre-match rationale will be saved with the pick.</p>
+              </div>
+              <button type="button" aria-label="Close" onClick={() => setSelectedRecommendation(null)} className="text-gray-500 hover:text-white"><X className="h-5 w-5" /></button>
+            </div>
+            <div className="mt-5 space-y-3">
+              <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Add to existing slip</label>
+              <select value={slipId} onChange={(event) => { setSlipId(event.target.value); setNewSlipTitle('') }} className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white">
+                <option value="">Create a new slip instead</option>
+                {availableSlips.map((slip) => <option key={slip.id} value={slip.id}>{slip.title} ({slip.type})</option>)}
+              </select>
+              {!slipId && <input value={newSlipTitle} onChange={(event) => setNewSlipTitle(event.target.value)} placeholder="New slip title" className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white placeholder:text-gray-600" />}
+              <label className="flex items-center gap-3 text-xs font-bold text-gray-400"><input type="checkbox" checked={premiumOnly} onChange={(event) => setPremiumOnly(event.target.checked)} className="h-4 w-4" /> Premium pick</label>
+              <p className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs text-gray-400">Model probability: <strong className="text-primary">{selectedRecommendation.probability}%</strong>. The system will calculate indicative fair odds for the slip.</p>
+              {error && <p className="text-xs font-bold text-red-400">{error}</p>}
+              <div className="flex gap-2 pt-2"><Button type="button" variant="outline" onClick={() => setSelectedRecommendation(null)} className="flex-1">Cancel</Button><Button type="button" variant="primary" onClick={publish} isLoading={publishingRank === selectedRecommendation.rank} className="flex-1">Publish Pick</Button></div>
+            </div>
           </div>
         </div>
       )}

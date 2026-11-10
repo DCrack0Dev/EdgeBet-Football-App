@@ -90,6 +90,13 @@ export default async function AdminDashboard() {
     .order('kickoff_time', { ascending: true })
     .limit(5)
 
+  const { data: availableSlips } = await supabase
+    .from('slips')
+    .select('id, title, type, total_odds')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false })
+    .limit(20)
+
   // Recent Picks
   const { data: recentPicks } = await supabase
     .from('picks')
@@ -215,6 +222,7 @@ export default async function AdminDashboard() {
                       homeName={match.home_team?.name || 'Home'}
                       awayName={match.away_team?.name || 'Away'}
                       initialSummary={match.analysis_summary}
+                      availableSlips={availableSlips || []}
                     />
                     </div>
                   ))}
