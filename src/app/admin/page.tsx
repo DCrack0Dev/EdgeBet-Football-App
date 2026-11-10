@@ -29,6 +29,7 @@ import { Match, Pick } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
 import { Metadata } from 'next'
 import { RemoteImage } from '@/components/RemoteImage'
+import MatchAnalysisCard from '@/components/admin/MatchAnalysisCard'
 
 export const dynamic = 'force-dynamic'
 
@@ -162,7 +163,8 @@ export default async function AdminDashboard() {
               <Card className="bg-card border-white/5 overflow-hidden">
                 <div className="divide-y divide-white/5">
                   {(recentMatches as any[])?.map((match: Match) => (
-                    <div key={match.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-white/5 transition-all group">
+                    <div key={match.id} className="p-4 sm:p-6">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-white/5 transition-all group">
                       <div className="flex items-center gap-6">
                         <div className="flex flex-col items-center gap-1 text-[10px] font-black text-gray-500 uppercase tracking-widest min-w-[80px]">
                           <Calendar className="w-4 h-4" />
@@ -207,6 +209,13 @@ export default async function AdminDashboard() {
                           </Button>
                         </Link>
                       </div>
+                    </div>
+                    <MatchAnalysisCard
+                      matchId={match.id}
+                      homeName={match.home_team?.name || 'Home'}
+                      awayName={match.away_team?.name || 'Away'}
+                      initialSummary={match.analysis_summary}
+                    />
                     </div>
                   ))}
                 </div>

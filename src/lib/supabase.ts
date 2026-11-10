@@ -144,6 +144,7 @@ export type Match = {
   status: 'scheduled' | 'live' | 'finished' | 'postponed';
   home_score?: number;
   away_score?: number;
+  analysis_summary?: string;
   created_at: string;
   // Relationships
   league?: League;

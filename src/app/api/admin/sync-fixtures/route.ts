@@ -106,7 +106,14 @@ export async function POST(request: Request) {
         away_score: item.goals?.away ?? null,
         is_featured: false,
         premium_analysis: false,
-        analysis_summary: null,
+        analysis_summary: JSON.stringify({
+          source: 'api-football',
+          fixtureId: fixture.id,
+          leagueId: league.id,
+          season: league.season,
+          homeTeamId: home.id,
+          awayTeamId: away.id,
+        }),
       }, { onConflict: 'id' })
       if (matchError) throw matchError
 
