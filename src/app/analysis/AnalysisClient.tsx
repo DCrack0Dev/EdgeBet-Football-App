@@ -22,6 +22,19 @@ interface AnalysisClientProps {
   initialMatches: any[]
 }
 
+function readablePreMatchSummary(value: unknown) {
+  if (!value || typeof value !== 'string') return 'Analysis will appear after an administrator runs the pre-match analyzer.'
+  try {
+    const stored = JSON.parse(value)
+    const report = stored.analysis
+    if (!report) return value
+    const topPick = report.recommendations?.[0]
+    return `Form: ${report.factors.form.home} vs ${report.factors.form.away}. H2H: ${report.factors.h2h.homeWins} home wins, ${report.factors.h2h.draws} draws, ${report.factors.h2h.awayWins} away wins. Player availability: ${report.factors.playerAvailability.homeUnavailable} vs ${report.factors.playerAvailability.awayUnavailable} unavailable. News reviewed: ${report.factors.news.articles}. Top model recommendation: ${topPick?.selection || 'Pending'} (${topPick?.probability || 0}%).`
+  } catch {
+    return value
+  }
+}
+
 export function AnalysisClient({ initialMatches }: AnalysisClientProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [leagueFilter, setLeagueFilter] = useState('all')
@@ -75,7 +88,9 @@ export function AnalysisClient({ initialMatches }: AnalysisClientProps) {
 
       {/* Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {filteredMatches.map((match) => (
+        {filteredMatches.map((match) => {
+          const preMatchSummary = readablePreMatchSummary(match.analysis_summary)
+          return (
           <Card key={match.id} className="bg-card border-white/5 overflow-hidden group hover:border-primary/20 transition-all duration-300">
             <CardHeader className="p-8 pb-0">
               <div className="flex justify-between items-start mb-6">
@@ -136,7 +151,7 @@ export function AnalysisClient({ initialMatches }: AnalysisClientProps) {
                     <span className="text-[10px] font-black text-primary uppercase tracking-widest">Suggested Edge</span>
                   </div>
                   <p className="text-gray-400 text-sm font-medium leading-relaxed italic line-clamp-2">
-                    {match.analysis_summary || "Statistical models favor a high-scoring encounter. Home team's offensive efficiency is up 12%."}
+                    {preMatchSummary}
                   </p>
                 </div>
 
@@ -148,7 +163,8 @@ export function AnalysisClient({ initialMatches }: AnalysisClientProps) {
               </div>
             </CardContent>
           </Card>
-        ))}
+          )
+        })}
 
         {filteredMatches.length === 0 && (
           <div className="col-span-full py-24 text-center bg-white/5 rounded-[40px] border-2 border-dashed border-white/5">
@@ -163,4 +179,3 @@ export function AnalysisClient({ initialMatches }: AnalysisClientProps) {
     </div>
   )
 }
-

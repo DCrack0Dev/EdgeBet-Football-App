@@ -55,6 +55,23 @@ export default function ResultsUpdatePage() {
     setLoading(false)
   }, [supabase])
 
+  const savePostMatchSummary = async (pick: any, status: 'won' | 'lost' | 'pending' | 'void') => {
+    const { data: existing } = await supabase.from('pick_results').select('id').eq('pick_id', pick.id).maybeSingle()
+    if (status === 'pending') {
+      if (existing?.id) await supabase.from('pick_results').delete().eq('id', existing.id)
+      return
+    }
+    const homeScore = pick.match?.home_score
+    const awayScore = pick.match?.away_score
+    const scoreText = Number.isFinite(homeScore) && Number.isFinite(awayScore) ? `Final score: ${homeScore}-${awayScore}.` : 'Final score data was not available at settlement.'
+    const resultSummary = `Post-match summary: ${scoreText} Selection “${pick.display_label}” was marked ${status.toUpperCase()}. Review the final score and match events against the pre-match analysis.`
+    if (existing?.id) {
+      await supabase.from('pick_results').update({ actual_outcome: status, result_summary: resultSummary, settled_at: new Date().toISOString() }).eq('id', existing.id)
+    } else {
+      await supabase.from('pick_results').insert({ pick_id: pick.id, actual_outcome: status, result_summary: resultSummary, settled_at: new Date().toISOString() })
+    }
+  }
+
   useEffect(() => {
     async function fetchData() {
       const { data: { session } } = await supabase.auth.getSession()
@@ -82,6 +99,7 @@ export default function ResultsUpdatePage() {
 
   const handleSettle = async (pickId: string, status: 'won' | 'lost' | 'pending' | 'void') => {
     setSettlingId(pickId)
+    const targetPick = picks.find((pick) => pick.id === pickId)
     const { error } = await supabase
       .from('picks')
       .update({ result_status: status })
@@ -90,6 +108,7 @@ export default function ResultsUpdatePage() {
     if (error) {
       alert(error.message)
     } else {
+      if (targetPick) await savePostMatchSummary(targetPick, status)
       // Update local state
       setPicks(prev => prev.map(p => p.id === pickId ? { ...p, result_status: status } : p))
       
@@ -112,6 +131,10 @@ export default function ResultsUpdatePage() {
     if (error) {
       alert(error.message)
     } else {
+      await Promise.all(selectedPicks.map((pickId) => {
+        const targetPick = picks.find((pick) => pick.id === pickId)
+        return targetPick ? savePostMatchSummary(targetPick, status) : Promise.resolve()
+      }))
       setPicks(prev => prev.map(p => selectedPicks.includes(p.id) ? { ...p, result_status: status } : p))
       setSelectedPicks([])
       router.refresh()

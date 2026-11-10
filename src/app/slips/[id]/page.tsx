@@ -25,6 +25,19 @@ import { SlipAdUnlockOverlay } from '@/components/SlipAdUnlockOverlay'
 
 export const dynamic = 'force-dynamic'
 
+function readablePreMatchSummary(value: unknown) {
+  if (!value || typeof value !== 'string') return 'Pre-match analysis is not available for this selection.'
+  try {
+    const stored = JSON.parse(value)
+    const report = stored.analysis
+    if (!report) return value
+    const topPick = report.recommendations?.[0]
+    return `Form: ${report.factors.form.home} vs ${report.factors.form.away}. H2H: ${report.factors.h2h.homeWins} home wins, ${report.factors.h2h.draws} draws, ${report.factors.h2h.awayWins} away wins. Player data and availability, ${report.factors.news.articles} news articles, and recent scoring rates were included. Top recommendation: ${topPick?.selection || 'Pending'} (${topPick?.probability || 0}%).`
+  } catch {
+    return value
+  }
+}
+
 export default async function SlipDetailsPage({ params }: { params: { id: string } }) {
   const supabase = await createServerClient()
   const { id } = params
@@ -44,7 +57,7 @@ export default async function SlipDetailsPage({ params }: { params: { id: string
 
   const { data: slip } = await supabase
     .from('slips')
-    .select('*, items:slip_items(pick:picks(*, match:matches(*, league:leagues(*), home_team:teams(*), away_team:teams(*))))')
+    .select('*, items:slip_items(pick:picks(*, results:pick_results(*), match:matches(*, league:leagues(*), home_team:teams(*), away_team:teams(*))))')
     .eq('id', id)
     .single()
 
@@ -255,14 +268,22 @@ export default async function SlipDetailsPage({ params }: { params: { id: string
                         </div>
                       </div>
 
-                      {item.analyst_reason && (
-                        <div className="relative p-6 bg-white/5 rounded-[24px] border border-white/5 group-hover:bg-white/10 transition-colors">
-                          <div className="absolute -top-2 left-6 px-2 bg-background text-[9px] font-black text-primary uppercase tracking-[0.2em]">Analyst Rationale</div>
-                          <p className="text-gray-400 leading-relaxed font-medium italic text-lg">
-                            "{item.analyst_reason}"
-                          </p>
+                      <div className="grid gap-3">
+                        <div className="relative p-5 bg-primary/[0.05] rounded-[24px] border border-primary/15">
+                          <div className="mb-2 text-[9px] font-black text-primary uppercase tracking-[0.2em]">Pre-match summary</div>
+                          <p className="text-gray-300 leading-relaxed font-medium text-sm">{readablePreMatchSummary(item.match?.analysis_summary)}</p>
                         </div>
-                      )}
+                        {item.analyst_reason && (
+                          <div className="relative p-5 bg-white/5 rounded-[24px] border border-white/5">
+                            <div className="mb-2 text-[9px] font-black text-primary uppercase tracking-[0.2em]">Prediction reason</div>
+                            <p className="text-gray-400 leading-relaxed font-medium italic text-sm">{item.analyst_reason}</p>
+                          </div>
+                        )}
+                        <div className="relative p-5 bg-white/5 rounded-[24px] border border-white/5">
+                          <div className="mb-2 text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Post-match summary</div>
+                          <p className="text-gray-500 leading-relaxed font-medium text-sm">{item.results?.[0]?.result_summary || 'Available after the match is settled.'}</p>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Stats Sidebar */}
